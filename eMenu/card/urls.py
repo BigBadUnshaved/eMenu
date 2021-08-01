@@ -1,8 +1,9 @@
 from django.urls import path
-from card.views import CardListView, CardDetailView, CardCreateView
+from . import views
 
 urlpatterns = [
-    path('', CardListView.as_view(), name='card-list'),
-    path('<int:pk>/', CardDetailView.as_view(), name='card-detail'),
-    path('new/', CardCreateView.as_view(), name='card-create'),
+    path('', views.CardListView.as_view(), name='card-list'),
+    path('<int:pk>/', views.CardDetailView.as_view(), name='card-detail'),
+    path('new/', views.CardCreateView.as_view(), name='card-create'),
+    path('<int:pk>/edit/', views.CardUpdateView.as_view(), name='card-edit'),
 ]
