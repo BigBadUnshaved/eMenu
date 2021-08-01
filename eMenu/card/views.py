@@ -77,3 +77,25 @@ class CardDeleteView(DeleteView):
 class DishListView(ListView):
     model = Dish
     template_name = 'dish_list.html'
+
+class DishDetailView(DetailView):
+    model = Dish
+    template_name = 'dish_detail.html'
+
+class DishCreateView(CreateView):
+    model = Dish
+    fields = [
+        'name', 'description', 'price', 'preparation_time',
+        'is_vegetarian', 'cards'
+    ]
+
+class DishUpdateView(UpdateView):
+    model = Dish
+    fields = [
+        'name', 'description', 'price', 'preparation_time',
+        'is_vegetarian', 'cards'
+    ]
+
+class DishDeleteView(DeleteView):
+    model = Dish
+    success_url = reverse_lazy('dish-list')

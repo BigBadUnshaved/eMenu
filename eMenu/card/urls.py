@@ -10,4 +10,10 @@ urlpatterns = [
         name='card-delete'
     ),
     path('dish', views.DishListView.as_view(), name='dish-list'),
+    path('dish/<int:pk>/', views.DishDetailView.as_view(), name='dish-detail'),
+    path('dish/new/', views.DishCreateView.as_view(), name='dish-create'),
+    path('dish/<int:pk>/edit/', views.DishUpdateView.as_view(), name='dish-edit'),
+    path('dish/<int:pk>/delete/', views.DishDeleteView.as_view(),
+        name='dish-delete'
+    ),
 ]

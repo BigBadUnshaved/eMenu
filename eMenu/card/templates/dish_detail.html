@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+ <div class="row">
+  <div class="col-md-3">
+   <div class="border-rectangle-button">
+      <a href="{% url 'dish-list' %}"></i>Go back to list of dishes</a>
+   </div>
+  </div>
+  <div class="col-md-2">
+   <div class="border-rectangle-button">
+      <a href="{% url 'dish-edit' object.id %}"></i>Edit this dish</a>
+   </div>
+  </div>
+  <div class="col-md-2">
+   <div class="filled-rectangle-button">
+      <a href="{% url 'dish-delete' object.id %}"></i>Delete this dish</a>
+   </div>
+  </div>
+ </div>
+</div>
+<h3>{{object.name}}</h3>
+<h4>{{object.description}}</h4>
+creation date: {{object.creation_date}}<br>
+date of the last change: {{object.last_change_date}}<br>
+price: {{object.price}}<br>
+preparation time: {{object.preparation_time}}<br>
+vegetarian: {{object.is_vegetarian|yesno:"yes, no"}}
+{% endblock %}

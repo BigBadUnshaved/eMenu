@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
+    <div class="col-md-3">
+     <div class="border-rectangle-button">
+        <a href="{% url 'dish-create' %}"></i>Create new dish</a>
+     </div>
+    </div>
     <div class="default-table">
      <table>
        <thead>
@@ -16,7 +21,7 @@
        <tbody>
          {% for obj in object_list %}
          <tr>
-           <td>{{obj.name}}</td>
+           <td><a href="{% url 'dish-detail' obj.pk %}">{{obj.name}}</a></td>
            <td>{{obj.description}}</td>
            <td>{{obj.price}}</td>
            <td>{{obj.preparation_time}}</td>

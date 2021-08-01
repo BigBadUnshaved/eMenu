@@ -80,3 +80,6 @@ class Dish(models.Model):
             msg = 'Price cannot be lower then 0.00'
             raise ValidationError(msg)
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('dish-detail', kwargs={'pk': self.pk})
