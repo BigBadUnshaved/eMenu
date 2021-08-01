@@ -14,7 +14,8 @@ def assert_text_field_length(obj, field_name='description'):
         assert value_len <= max_length
     except AssertionError:
         message = 'Length of {} cannot exceed {} characters (current: {})'
-        raise ValidationError(message.format(field_name, max_length, value_len))
+        message = message.format(field_name, max_length, value_len)
+        raise ValidationError(message)
 
 
 class Card(models.Model):
