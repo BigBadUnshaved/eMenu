@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
+	<div class="col-md-3">
+	 <div class="border-rectangle-button">
+	    <a href="{% url 'card-create' %}"></i>Create new menu card</a>
+	 </div>
+	</div>
      <form action="{% url 'card-list' %}" method="get">
     {{form}}
     <button type="submit">Filter</button>

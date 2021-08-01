@@ -3,6 +3,7 @@ from decimal import Decimal
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator, MinValueValidator
 from django.db import models
+from django.urls import reverse
 
 def assert_text_field_length(obj, field_name='description'):
     obj_class = obj.__class__
@@ -34,6 +35,9 @@ class Card(models.Model):
     def save(self, *args, **kwargs):
         assert_text_field_length(self)
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('card-detail', kwargs={'pk': self.pk})
 
 class Dish(models.Model):
     cards = models.ManyToManyField(

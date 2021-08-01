@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.db.models import Count
 from django.shortcuts import render
-from django.views.generic import DetailView, ListView
+from django.views.generic import CreateView, DetailView, ListView
 from django.views.generic.edit import FormMixin
 
 from .forms import CardListForm
@@ -59,3 +59,7 @@ class CardListView(FormMixin, ListView):
 class CardDetailView(DetailView):
     model = Card
     template_name = 'card_detail.html'
+
+class CardCreateView(CreateView):
+    model = Card
+    fields = ['name', 'description']
