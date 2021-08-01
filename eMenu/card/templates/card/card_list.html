@@ -17,7 +17,7 @@
 	<tbody>
 	  {% for obj in object_list %}
 	  <tr>
-	    <td>{{obj.name}}</td>
+            <td><a href="{% url 'card-detail' obj.id %}">{{obj.name}}</a></td>
 	    <td>
 	     {% for dish in obj.dishes.all %}
 	      {{dish.name}}{% if not forloop.last %}<br>{% endif %}
