@@ -73,3 +73,7 @@ class CardUpdateView(UpdateView):
 class CardDeleteView(DeleteView):
     model = Card
     success_url = reverse_lazy('card-list')
+
+class DishListView(ListView):
+    model = Dish
+    template_name = 'dish_list.html'

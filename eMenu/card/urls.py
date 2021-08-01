@@ -9,4 +9,5 @@ urlpatterns = [
     path('<int:pk>/delete/', views.CardDeleteView.as_view(),
         name='card-delete'
     ),
+    path('dish', views.DishListView.as_view(), name='dish-list'),
 ]
