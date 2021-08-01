@@ -12,6 +12,11 @@
       <a href="{% url 'card-edit' object.id %}"></i>Edit this menu</a>
    </div>
   </div>
+  <div class="col-md-2">
+   <div class="filled-rectangle-button">
+      <a href="{% url 'card-delete' object.id %}"></i>Delete this menu</a>
+   </div>
+  </div>
  </div>
 </div>
 <h3>{{object.name}}</h3>

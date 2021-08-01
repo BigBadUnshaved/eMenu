@@ -2,7 +2,9 @@ from datetime import datetime
 
 from django.db.models import Count
 from django.shortcuts import render
-from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from django.urls import reverse_lazy
+from django.views.generic import (CreateView, DeleteView, DetailView,
+        ListView, UpdateView)
 from django.views.generic.edit import FormMixin
 
 from .forms import CardListForm
@@ -67,3 +69,7 @@ class CardCreateView(CreateView):
 class CardUpdateView(UpdateView):
     model = Card
     fields = ['name', 'description']
+
+class CardDeleteView(DeleteView):
+    model = Card
+    success_url = reverse_lazy('card-list')
