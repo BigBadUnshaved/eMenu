@@ -70,4 +70,9 @@ class Dish(models.Model):
 
     def save(self, *args, **kwargs):
         assert_text_field_length(self)
+        try:
+            assert self.price >= Decimal(0)
+        except AssertionError:
+            msg = 'Price cannot be lower then 0.00'
+            raise ValidationError(msg)
         super().save(*args, **kwargs)
