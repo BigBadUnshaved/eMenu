@@ -1,5 +1,6 @@
 from django import forms
 
+
 class CardListForm(forms.Form):
     name = forms.CharField(required=False, max_length=50)
     creation_date__gte = forms.DateTimeField(
@@ -18,3 +19,4 @@ class CardListForm(forms.Form):
         ('-dishes_count', 'by number of dishes (descending)'),
     ]
     order_by = forms.ChoiceField(required=False, choices=order_choices)
+

@@ -1,6 +1,9 @@
 from datetime import datetime
+from re import match
 
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
 from django.db.models import Count
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -11,17 +14,36 @@ from django.views.generic.edit import FormMixin
 from .forms import CardListForm
 from .models import Card, Dish
 
-_fmt_str_to_date = lambda x: datetime(*(int(i) for i in x.split('-')))
+def fmt_str_to_date(date_as_str):
+    args = [int(i) for i in date_as_str.split('-')]
+    while len(args) < 3:
+        args.append(1)
+    return datetime(*args)
 
-def filter_qs_by_str_date(queryset, query_dict, field_name):
+def validate_date_format(date):
+    regex_pattern = '[0-9]{4}(-[0-9]{1,2}){0,4}'
+    date = date.replace(' ', '')
+    date_match = match(regex_pattern, date)
+    if not date_match:
+        msg = "Please enter date in following format: YYYY-MM-DD"
+        raise ValidationError(msg)
+
+def filter_qs_by_str_date(queryset, query_dict, field_name, request):
     date_as_str = query_dict.get(field_name, None)
     if not date_as_str:
         return queryset
-    date = _fmt_str_to_date(date_as_str)
+    try:
+        validate_date_format(date_as_str)
+    except ValidationError as e:
+        messages.error(request, e)
+        return queryset
+    date = fmt_str_to_date(date_as_str)
     return queryset.filter(**{field_name: date})
+
 
 class MyLoginRequiredMixin(LoginRequiredMixin):
     login_url = '/login/'
+
 
 class CardListView(FormMixin, ListView):
     form_class = CardListForm
@@ -36,16 +58,16 @@ class CardListView(FormMixin, ListView):
             queryset = queryset.filter(name__icontains=name)
 
         queryset = filter_qs_by_str_date(
-                queryset, query_dict, 'creation_date__lte',
+                queryset, query_dict, 'creation_date__lte', self.request,
         )
         queryset = filter_qs_by_str_date(
-                queryset, query_dict, 'creation_date__gte',
+                queryset, query_dict, 'creation_date__gte', self.request,
         )
         queryset = filter_qs_by_str_date(
-                queryset, query_dict, 'last_change_date__lte',
+                queryset, query_dict, 'last_change_date__lte', self.request,
         )
         queryset = filter_qs_by_str_date(
-                queryset, query_dict, 'last_change_date__gte',
+                queryset, query_dict, 'last_change_date__gte', self.request,
         )
 
         order_by = query_dict.get('order_by', None)
@@ -55,36 +77,43 @@ class CardListView(FormMixin, ListView):
             queryset = queryset.order_by(order_by)
         return queryset
         
-    #TODO hide empty cards if not authorized
     def get_queryset(self):
         queryset = super().get_queryset()
+        if not self.request.user.is_authenticated:
+            queryset = queryset.filter(dish__isnull=False)
         queryset = queryset.prefetch_related('dishes')
-        queryset = self.filter_queryset(queryset)
-        return queryset
+        return self.filter_queryset(queryset).distinct()
+
 
 class CardDetailView(DetailView):
     model = Card
     template_name = 'card_detail.html'
 
+
 class CardCreateView(MyLoginRequiredMixin, CreateView):
     model = Card
     fields = ['name', 'description']
+
 
 class CardUpdateView(MyLoginRequiredMixin, UpdateView):
     model = Card
     fields = ['name', 'description']
 
+
 class CardDeleteView(MyLoginRequiredMixin, DeleteView):
     model = Card
     success_url = reverse_lazy('card-list')
+
 
 class DishListView(MyLoginRequiredMixin, ListView):
     model = Dish
     template_name = 'dish_list.html'
 
+
 class DishDetailView(MyLoginRequiredMixin, DetailView):
     model = Dish
     template_name = 'dish_detail.html'
+
 
 class DishCreateView(MyLoginRequiredMixin, CreateView):
     model = Dish
@@ -93,6 +122,7 @@ class DishCreateView(MyLoginRequiredMixin, CreateView):
         'cards', 'is_vegetarian', 
     ]
 
+
 class DishUpdateView(MyLoginRequiredMixin, UpdateView):
     model = Dish
     fields = [
@@ -100,6 +130,8 @@ class DishUpdateView(MyLoginRequiredMixin, UpdateView):
         'cards', 'is_vegetarian', 
     ]
 
+
 class DishDeleteView(MyLoginRequiredMixin, DeleteView):
     model = Dish
     success_url = reverse_lazy('dish-list')
+
