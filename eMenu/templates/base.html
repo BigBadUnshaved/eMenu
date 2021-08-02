@@ -56,20 +56,27 @@ https://templatemo.com/tm-529-ramayana
             <!-- Menu -->
             <nav id="menu">
               <ul>
+		{% if user.is_authenticated %}
+		  <li><a href="{% url 'logout' %}?next={{request.path}}">Logout</a></li>
+		{% else %}
+		  <li><a href="{% url 'login' %}?next={{request.path}}">Login</a></li>
+		{% endif %}
 	        <li><a href="{% url 'home' %}">Homepage</a></li>
                 <li>
                   <span class="opener">Menu cards</span>
                   <ul>
 		    <li><a href="{% url 'card-list' %}">List of menu cards</a></li>
-		    <li><a href="{% url 'card-create' %}">Craete new menu card</a></li>
+		    {% if user.is_authenticated %}<li><a href="{% url 'card-create' %}">Craete new menu card</a></li>{% endif %}
                   </ul>
                 </li>
+		{% if user.is_authenticated %}
                 <li>
                   <span class="opener">Dishes</span>
                   <ul>
 		    <li><a href="{% url 'dish-list' %}">List dishes</a></li>
                   </ul>
                 </li>
+		{% endif %}
               </ul>
             </nav>
 
