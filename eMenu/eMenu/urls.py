@@ -18,7 +18,6 @@ import debug_toolbar
 from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import include, path
-from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 
 urlpatterns = [
