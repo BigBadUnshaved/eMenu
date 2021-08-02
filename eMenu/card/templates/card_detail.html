@@ -7,6 +7,7 @@
       <a href="{% url 'card-list' %}"></i>Go back to list of menu cards</a>
    </div>
   </div>
+  {% if user.is_authenticated %}
   <div class="col-md-2">
    <div class="border-rectangle-button">
       <a href="{% url 'card-edit' object.id %}"></i>Edit this menu</a>
@@ -17,6 +18,7 @@
       <a href="{% url 'card-delete' object.id %}"></i>Delete this menu</a>
    </div>
   </div>
+  {% endif %}
  </div>
 </div>
 <h3>{{object.name}}</h3>

@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -18,6 +19,9 @@ def filter_qs_by_str_date(queryset, query_dict, field_name):
         return queryset
     date = _fmt_str_to_date(date_as_str)
     return queryset.filter(**{field_name: date})
+
+class MyLoginRequiredMixin(LoginRequiredMixin):
+    login_url = '/login/'
 
 class CardListView(FormMixin, ListView):
     form_class = CardListForm
@@ -62,40 +66,40 @@ class CardDetailView(DetailView):
     model = Card
     template_name = 'card_detail.html'
 
-class CardCreateView(CreateView):
+class CardCreateView(MyLoginRequiredMixin, CreateView):
     model = Card
     fields = ['name', 'description']
 
-class CardUpdateView(UpdateView):
+class CardUpdateView(MyLoginRequiredMixin, UpdateView):
     model = Card
     fields = ['name', 'description']
 
-class CardDeleteView(DeleteView):
+class CardDeleteView(MyLoginRequiredMixin, DeleteView):
     model = Card
     success_url = reverse_lazy('card-list')
 
-class DishListView(ListView):
+class DishListView(MyLoginRequiredMixin, ListView):
     model = Dish
     template_name = 'dish_list.html'
 
-class DishDetailView(DetailView):
+class DishDetailView(MyLoginRequiredMixin, DetailView):
     model = Dish
     template_name = 'dish_detail.html'
 
-class DishCreateView(CreateView):
+class DishCreateView(MyLoginRequiredMixin, CreateView):
     model = Dish
     fields = [
         'name', 'description', 'price', 'preparation_time',
-        'is_vegetarian', 'cards'
+        'cards', 'is_vegetarian', 
     ]
 
-class DishUpdateView(UpdateView):
+class DishUpdateView(MyLoginRequiredMixin, UpdateView):
     model = Dish
     fields = [
         'name', 'description', 'price', 'preparation_time',
-        'is_vegetarian', 'cards'
+        'cards', 'is_vegetarian', 
     ]
 
-class DishDeleteView(DeleteView):
+class DishDeleteView(MyLoginRequiredMixin, DeleteView):
     model = Dish
     success_url = reverse_lazy('dish-list')
