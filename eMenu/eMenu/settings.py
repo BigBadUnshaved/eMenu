@@ -138,3 +138,5 @@ if DEBUG:
 
 LOGIN_REDIRECT_URL = '/card/'
 LOGUT_REDIRECT_URL = '/card/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
