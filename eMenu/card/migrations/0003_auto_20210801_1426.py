@@ -40,7 +40,7 @@ def initial_data(apps, schema_editor):
 
         mock_date = get_current_datetime() - timedelta(days=i)
         with mock.patch('django.utils.timezone.now',
-                        mock.Mock(retrn_value=mocked_date)):
+                        mock.Mock(return_value=mock_date)):
             card = Card.objects.create(**card_kwargs)
             dish = Dish.objects.create(**dish_kwargs)
 
