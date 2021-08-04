@@ -18,6 +18,7 @@ import debug_toolbar
 from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import include, path
+from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 
 urlpatterns = [
@@ -27,4 +28,8 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('', RedirectView.as_view(pattern_name='card-list'), name='home'),
     path('__debug__', include(debug_toolbar.urls)),
+    path('swagger-ui/', TemplateView.as_view(
+        template_name='swagger-ui.html',
+        extra_context={'schema_url':'openapi-schema'}
+    ), name='swagger-ui'),
 ]
