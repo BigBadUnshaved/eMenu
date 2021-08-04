@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.db.models import Count
+from django.db.models.functions import Lower
 from django.forms import CharField
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -64,6 +65,16 @@ class CardListView(FormMixin, ListView):
     model = Card
     template_name = 'card_list.html'
 
+    def order_queryset(self, queryset, query_dict):
+        order_by = query_dict.get('order_by', None)
+        if not order_by:
+            return queryset
+        if 'dishes' in order_by:
+            queryset = queryset.annotate(dishes_count=Count('dish'))
+        if 'alph_name' in order_by:
+            queryset = queryset.annotate(alph_name=Lower('name'))
+        return queryset.order_by(order_by)
+
     def filter_queryset(self, queryset):
         query_dict = self.request.GET
 
@@ -83,14 +94,9 @@ class CardListView(FormMixin, ListView):
         queryset = filter_qs_by_str_date(
                 queryset, query_dict, 'last_change_date__gte', self.request,
         )
-
-        order_by = query_dict.get('order_by', None)
-        if order_by:
-            if 'dishes' in order_by:
-                queryset = queryset.annotate(dishes_count=Count('dish'))
-            queryset = queryset.order_by(order_by)
+        queryset = self.order_queryset(queryset, query_dict)
         return queryset
-        
+
     def get_queryset(self):
         queryset = super().get_queryset()
         if not self.request.user.is_authenticated:
