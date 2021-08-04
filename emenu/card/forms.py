@@ -2,7 +2,7 @@ from django import forms
 
 
 class CardListForm(forms.Form):
-    name = forms.CharField(required=False, max_length=50)
+    name = forms.CharField(required=False, max_length=50, strip=False)
     creation_date__gte = forms.DateTimeField(
             required=False, label='creation date from')
     creation_date__lte = forms.DateTimeField(

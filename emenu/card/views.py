@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.db.models import Count
+from django.forms import CharField
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DeleteView, DetailView,
@@ -41,8 +42,21 @@ def filter_qs_by_str_date(queryset, query_dict, field_name, request):
     return queryset.filter(**{field_name: date})
 
 
-class MyLoginRequiredMixin(LoginRequiredMixin):
+class EmenuLoginRequiredMixin(LoginRequiredMixin):
     login_url = '/login/'
+
+
+class NoStripMixin(EmenuLoginRequiredMixin):
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        char_fields = (
+            name
+            for name, field in form.fields.items()
+            if isinstance(field, CharField)
+        )
+        for name in char_fields:
+            form.fields[name].strip = False
+        return form
 
 
 class CardListView(FormMixin, ListView):
@@ -90,32 +104,32 @@ class CardDetailView(DetailView):
     template_name = 'card_detail.html'
 
 
-class CardCreateView(MyLoginRequiredMixin, CreateView):
+class CardCreateView(NoStripMixin, CreateView):
     model = Card
     fields = ['name', 'description']
 
 
-class CardUpdateView(MyLoginRequiredMixin, UpdateView):
+class CardUpdateView(NoStripMixin, UpdateView):
     model = Card
     fields = ['name', 'description']
 
 
-class CardDeleteView(MyLoginRequiredMixin, DeleteView):
+class CardDeleteView(EmenuLoginRequiredMixin, DeleteView):
     model = Card
     success_url = reverse_lazy('card-list')
 
 
-class DishListView(MyLoginRequiredMixin, ListView):
+class DishListView(NoStripMixin, ListView):
     model = Dish
     template_name = 'dish_list.html'
 
 
-class DishDetailView(MyLoginRequiredMixin, DetailView):
+class DishDetailView(EmenuLoginRequiredMixin, DetailView):
     model = Dish
     template_name = 'dish_detail.html'
 
 
-class DishCreateView(MyLoginRequiredMixin, CreateView):
+class DishCreateView(NoStripMixin, CreateView):
     model = Dish
     fields = [
         'name', 'description', 'price', 'preparation_time',
@@ -123,7 +137,7 @@ class DishCreateView(MyLoginRequiredMixin, CreateView):
     ]
 
 
-class DishUpdateView(MyLoginRequiredMixin, UpdateView):
+class DishUpdateView(NoStripMixin, UpdateView):
     model = Dish
     fields = [
         'name', 'description', 'price', 'preparation_time',
@@ -131,7 +145,7 @@ class DishUpdateView(MyLoginRequiredMixin, UpdateView):
     ]
 
 
-class DishDeleteView(MyLoginRequiredMixin, DeleteView):
+class DishDeleteView(EmenuLoginRequiredMixin, DeleteView):
     model = Dish
     success_url = reverse_lazy('dish-list')
 
