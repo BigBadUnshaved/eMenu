@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-5)6t2d5wb@etzww6y+4k)9!su90gvpho+45yhel&idb$^175+z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = int(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", default="").split(" ")
 
 
 # Application definition
@@ -82,7 +83,7 @@ DATABASES = {
         'NAME': 'emenu',
         'USER': 'emenu',
         'PASSWORD': 'pass',
-        'HOST': '127.0.0.1',
+        'HOST': 'db',
     }
 }
 
@@ -134,7 +135,7 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 if DEBUG:
-    INTERNAL_IPS=['127.0.0.1',]
+    INTERNAL_IPS=ALLOWED_HOSTS
 
 LOGIN_REDIRECT_URL = '/card/'
 LOGUT_REDIRECT_URL = '/card/'

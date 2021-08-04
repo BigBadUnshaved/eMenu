@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13.1
+    environment:
+      - POSTGRES_DB=emenu
+      - POSTGRES_USER=emenu
+      - POSTGRES_PASSWORD=pass
+      - TZ='GMT+2'
+      - PGTZ='GMT+2'
+    volumes:
+      - ./db:/docker-entrypoint-initdb.dt/
+  emenu:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/usr/src/emenu/
+    environment:
+      - DEBUG=1
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
