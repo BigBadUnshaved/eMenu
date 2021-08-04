@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
+	{% if user.is_authenticated %}
 	<div class="col-md-3">
 	 <div class="border-rectangle-button">
 	    <a href="{% url 'card-create' %}"></i>Create new menu card</a>
 	 </div>
 	</div>
+	{% endif %}
      <form action="{% url 'card-list' %}" method="get">
     {{form}}
     <button type="submit">Filter</button>
