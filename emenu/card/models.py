@@ -1,11 +1,15 @@
 from decimal import Decimal
 
 from django.core.exceptions import ValidationError
-from django.core.validators import MaxLengthValidator, MinValueValidator
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.urls import reverse
 
 def assert_text_field_length(obj, field_name='description'):
+    '''
+    Checks if for the given object the value assigned to the provided 
+    text field (description on default) complies with it's max_length. 
+    '''
     obj_class = obj.__class__
     deff_attribute = getattr(obj_class, field_name)
     max_length = deff_attribute.field.max_length
@@ -19,11 +23,13 @@ def assert_text_field_length(obj, field_name='description'):
         raise ValidationError(message)
 
 class EmenuModel(models.Model):
+    '''
+    Abstract model that contains common code for both Card and Dish models
+    '''
     name = models.CharField(max_length=50, unique=True)
     description = models.TextField(
             blank=True,
             max_length=1500,
-            validators=[MaxLengthValidator(1500)],
             )
     creation_date = models.DateTimeField(auto_now_add=True, editable=False)
     last_change_date = models.DateTimeField(auto_now=True, editable=False)
@@ -43,9 +49,16 @@ class EmenuModel(models.Model):
         super().save(*args, **kwargs)
 
 
-class Card(EmenuModel): pass
+class Card(EmenuModel):
+    '''
+    Model that corresponds to a single menu card.
+    '''
+    pass
 
 class Dish(EmenuModel):
+    '''
+    Model that corresponds to a single dish.
+    '''
     cards = models.ManyToManyField(
             Card,
             blank=True,
@@ -57,6 +70,7 @@ class Dish(EmenuModel):
             max_digits=10,
             decimal_places=2,
             validators=[MinValueValidator(Decimal('0'))],
+            help_text='in PLN',
     )
     preparation_time = models.PositiveSmallIntegerField(help_text='in minutes')
     is_vegetarian = models.BooleanField(

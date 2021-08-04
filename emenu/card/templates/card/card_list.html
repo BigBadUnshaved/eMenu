@@ -3,11 +3,11 @@
 	{% if user.is_authenticated %}
 	<div class="col-md-3">
 	 <div class="border-rectangle-button">
-	    <a href="{% url 'card-create' %}"></i>Create new menu card</a>
+	    <a href="{% url 'card-ui-create' %}"></i>Create new menu card</a>
 	 </div>
 	</div>
 	{% endif %}
-     <form action="{% url 'card-list' %}" method="get">
+     <form action="{% url 'card-ui-list' %}" method="get">
     {{form}}
     <button type="submit">Filter</button>
     </form>
@@ -24,7 +24,7 @@
 	<tbody>
 	  {% for obj in object_list %}
 	  <tr>
-            <td><a href="{% url 'card-detail' obj.id %}">{{obj.name}}</a></td>
+            <td><a href="{% url 'card-ui-detail' obj.id %}">{{obj.name}}</a></td>
 	    <td>
 	     {% for dish in obj.dishes.all %}
 	      {{dish.name}}{% if not forloop.last %}<br>{% endif %}

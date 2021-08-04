@@ -72,16 +72,16 @@ https://templatemo.com/tm-529-ramayana
                 <li>
                   <span class="opener">Menu cards</span>
                   <ul>
-		    <li><a href="{% url 'card-list' %}">List of menu cards</a></li>
-		    {% if user.is_authenticated %}<li><a href="{% url 'card-create' %}">Craete new menu card</a></li>{% endif %}
+		    <li><a href="{% url 'card-ui-list' %}">List of menu cards</a></li>
+		    {% if user.is_authenticated %}<li><a href="{% url 'card-ui-create' %}">Craete new menu card</a></li>{% endif %}
                   </ul>
                 </li>
 		{% if user.is_authenticated %}
                 <li>
                   <span class="opener">Dishes</span>
                   <ul>
-		    <li><a href="{% url 'dish-list' %}">List of dishes</a></li>
-		    <li><a href="{% url 'dish-create' %}">Create new dish</a></li>
+		    <li><a href="{% url 'dish-ui-list' %}">List of dishes</a></li>
+		    <li><a href="{% url 'dish-ui-create' %}">Create new dish</a></li>
                   </ul>
                 </li>
 		{% endif %}

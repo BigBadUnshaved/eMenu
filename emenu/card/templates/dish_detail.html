@@ -4,17 +4,17 @@
  <div class="row">
   <div class="col-md-3">
    <div class="border-rectangle-button">
-      <a href="{% url 'dish-list' %}"></i>Go back to list of dishes</a>
+      <a href="{% url 'dish-ui-list' %}"></i>Go back to list of dishes</a>
    </div>
   </div>
   <div class="col-md-2">
    <div class="border-rectangle-button">
-      <a href="{% url 'dish-edit' object.id %}"></i>Edit this dish</a>
+      <a href="{% url 'dish-ui-edit' object.id %}"></i>Edit this dish</a>
    </div>
   </div>
   <div class="col-md-2">
    <div class="filled-rectangle-button">
-      <a href="{% url 'dish-delete' object.id %}"></i>Delete this dish</a>
+      <a href="{% url 'dish-ui-delete' object.id %}"></i>Delete this dish</a>
    </div>
   </div>
  </div>

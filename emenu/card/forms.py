@@ -2,6 +2,9 @@ from django import forms
 
 
 class CardListForm(forms.Form):
+    '''
+    Form_class for cardlist using django generic views
+    '''
     name = forms.CharField(required=False, max_length=50, strip=False)
     creation_date__gte = forms.DateTimeField(
             required=False, label='creation date from')
