@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'eMenu.urls'
+ROOT_URLCONF = 'emenu.urls'
 
 TEMPLATES = [
     {
@@ -71,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'eMenu.wsgi.application'
+WSGI_APPLICATION = 'emenu.wsgi.application'
 
 
 # Database
