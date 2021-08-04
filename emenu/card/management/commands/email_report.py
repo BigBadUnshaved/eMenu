@@ -7,6 +7,7 @@ from django.utils.timezone import now
 
 from card.models import Dish
 
+
 EMAIL_NO_CHANGES_TEMPLATE = '''
 Good morning!
 
@@ -40,33 +41,54 @@ def get_boundry_dates():
     yesterday = today - timedelta(days=1)
     return yesterday, today
 
-def generate_user_emails():
+def generate_user_emails(user_qs=None):
     '''
     Return generator containing users' emails in str format.
     '''
-    user_qs = User.objects.exclude(email='')
+    if user_qs is None:
+        user_qs = User.objects.exclude(email='')
     return (str(user.email) for user in user_qs)
 
+def get_dish_report_line(dish):
+    '''
+    Return line for specific dish to be included in report
+    '''
+    cards = dish.cards.all()
+    cards_str = ', '.join((str(card) for card in cards))
+    if len(cards) > 1:
+        suffix = 'found on menu cards: {}'.format(cards_str)
+    elif len(cards) == 1:
+        suffix = 'found on menu card: {}'.format(cards_str)
+    else:
+        suffix = 'not currently found on any menu cards'
+    line = '{} {}'
+    return line.format(dish, suffix)
+
 class Command(BaseCommand):
-    help = '''Send e-mail to all users with a list of new '''\
-           '''and changed dishes during last 24 hours. '''
+    help = '''Send e-mail to all users with a list of dishes '''\
+           '''that were changed or added yesterday'''
 
     def handle(self, *args, **options):
+        user_qs = User.objects.exclude(email='')
+        if len(user_qs) == 0:
+            self.stdout.write('No users to send report to')
+            return
+
         yesterday, today = get_boundry_dates()
         dish_qs = Dish.objects\
             .filter(last_change_date__range=(yesterday, today))\
             .prefetch_related('cards')
 
         subject = 'Daily eMenu report'
+        _dish_str = lambda dish: '{} found on card(s) {}'.format
         if len(dish_qs) > 0:
             message = EMAIL_REPORT_TEMPLATE.format(
-                '\n'.join('{} found on card(s): {}'.format(
-                    dish, ', '.join(dish.cards.call() for dish in dish_qs)
-                ))
+                '\n'.join(get_dish_report_line(dish) for dish in dish_qs)
             )
         else:
             message = EMAIL_NO_CHANGES_TEMPLATE
 
         gen_datatuple = ((subject, message, EMAIL_FROM, [user])
-                         for user in generate_user_emails())
+                         for user in generate_user_emails(user_qs))
         send_mass_mail(tuple(tuple(i) for i in gen_datatuple))
+        self.stdout.write('Email report send to users')

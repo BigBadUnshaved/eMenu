@@ -11,11 +11,15 @@ services:
       - PGTZ='GMT+2'
     volumes:
       - ./db:/docker-entrypoint-initdb.dt/
+    ports:
+      - "5432:5432"
   redis:
     image: redis:alpine
   emenu:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/usr/src/emenu/
     environment:
@@ -34,6 +38,11 @@ services:
     environment:
       - DEBUG=1
       - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+      - POSTGRES_DB=emenu
+      - POSTGRES_USER=emenu
+      - POSTGRES_PASSWORD=pass
+      - TZ='GMT+2'
+      - PGTZ='GMT+2'
     depends_on:
       - db
       - emenu
@@ -46,6 +55,11 @@ services:
     environment:
       - DEBUG=1
       - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+      - POSTGRES_DB=emenu
+      - POSTGRES_USER=emenu
+      - POSTGRES_PASSWORD=pass
+      - TZ='GMT+2'
+      - PGTZ='GMT+2'
     depends_on:
       - db
       - emenu

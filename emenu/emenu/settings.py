@@ -84,6 +84,7 @@ DATABASES = {
         'USER': 'emenu',
         'PASSWORD': 'pass',
         'HOST': 'db',
+        'PORT': '5432',
     }
 }
 
@@ -142,5 +143,19 @@ LOGUT_REDIRECT_URL = '/card/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+CELERY_ENABLE_UTC = False
+CELERY_TIMEZONE = 'Europe/Warsaw'
+
 CELERY_BROKER_URL = "redis://redis:6379"
 CELERY_RESULT_BACKEND = "redis://redis:6379"
+
+from celery.schedules import crontab
+
+import emenu.tasks
+
+CELERY_BEAT_SCHEDULE = {
+    'send_email_report' : {
+        'task': 'emenu.tasks.send_email_report',
+        'schedule': crontab(hour=10, minute=0),
+    },
+}
