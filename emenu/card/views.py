@@ -113,16 +113,19 @@ class CardDetailView(DetailView):
 class CardCreateView(NoStripMixin, CreateView):
     model = Card
     fields = ['name', 'description']
+    template_name = 'edit_form.html'
 
 
 class CardUpdateView(NoStripMixin, UpdateView):
     model = Card
     fields = ['name', 'description']
+    template_name = 'edit_form.html'
 
 
 class CardDeleteView(EmenuLoginRequiredMixin, DeleteView):
     model = Card
     success_url = reverse_lazy('card-list')
+    template_name = 'confirm_delete.html'
 
 
 class DishListView(NoStripMixin, ListView):
@@ -141,6 +144,7 @@ class DishCreateView(NoStripMixin, CreateView):
         'name', 'description', 'price', 'preparation_time',
         'cards', 'is_vegetarian', 
     ]
+    template_name = 'edit_form.html'
 
 
 class DishUpdateView(NoStripMixin, UpdateView):
@@ -149,9 +153,11 @@ class DishUpdateView(NoStripMixin, UpdateView):
         'name', 'description', 'price', 'preparation_time',
         'cards', 'is_vegetarian', 
     ]
+    template_name = 'edit_form.html'
 
 
 class DishDeleteView(EmenuLoginRequiredMixin, DeleteView):
     model = Dish
     success_url = reverse_lazy('dish-list')
+    template_name = 'confirm_delete.html'
 
