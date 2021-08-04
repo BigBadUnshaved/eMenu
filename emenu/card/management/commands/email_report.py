@@ -21,6 +21,7 @@ EMAIL_REPORT_TEMPLATE = '''
 Good morning!
 
 Here is the list of dishes changed yesterday: 
+
 {}
 
 Have a nice day,
@@ -61,8 +62,8 @@ def get_dish_report_line(dish):
         suffix = 'found on menu card: {}'.format(cards_str)
     else:
         suffix = 'not currently found on any menu cards'
-    line = '{} {}'
-    return line.format(dish, suffix)
+    line = '{} {}\nCurrent description: {}\n'
+    return line.format(dish, suffix, dish.description)
 
 class Command(BaseCommand):
     help = '''Send e-mail to all users with a list of dishes '''\
@@ -80,7 +81,6 @@ class Command(BaseCommand):
             .prefetch_related('cards')
 
         subject = 'Daily eMenu report'
-        _dish_str = lambda dish: '{} found on card(s) {}'.format
         if len(dish_qs) > 0:
             message = EMAIL_REPORT_TEMPLATE.format(
                 '\n'.join(get_dish_report_line(dish) for dish in dish_qs)
