@@ -13,8 +13,8 @@ class CardListForm(forms.Form):
             required=False, label='last change date to')
     order_choices = [
         ('', ''),
-        ('alph_name', 'by name (ascending)'),
-        ('-alph_name', 'by name (descending'),
+        ('alph_name', 'alphabetically by name (ascending)'),
+        ('-alph_name', 'alphabetically by name (descending'),
         ('dishes_count', 'by number of dishes (ascending)'),
         ('-dishes_count', 'by number of dishes (descending)'),
     ]
