@@ -27,7 +27,7 @@ Have a nice day,
 eMenu
 '''
 
-EMAIL_FROM = ''
+EMAIL_FROM = 'admin@emenu.com'
 
 def get_boundry_dates():
     '''
