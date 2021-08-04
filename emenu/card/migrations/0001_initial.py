@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
                 ('preparation_time', models.PositiveSmallIntegerField(help_text='in minutes')),
                 ('creation_date', models.DateTimeField(auto_now_add=True)),
                 ('last_change_date', models.DateTimeField(auto_now=True)),
-                ('cards', models.ManyToManyField(related_name='dishes', related_query_name='dish', to='card.Card')),
+                ('cards', models.ManyToManyField(related_name='dishes', related_query_name='dishes', to='card.Card')),
             ],
         ),
     ]

@@ -100,7 +100,7 @@ class CardListView(FormMixin, ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         if not self.request.user.is_authenticated:
-            queryset = queryset.filter(dish__isnull=False)
+            queryset = queryset.filter(dishes__isnull=False)
         queryset = queryset.prefetch_related('dishes')
         return self.filter_queryset(queryset).distinct()
 
@@ -160,4 +160,36 @@ class DishDeleteView(EmenuLoginRequiredMixin, DeleteView):
     model = Dish
     success_url = reverse_lazy('dish-list')
     template_name = 'confirm_delete.html'
+
+
+
+from rest_framework import status, generics, permissions
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from card.serializers import CardSerializer, DishSerializer
+
+class EmenuCardAPIMixin():
+    queryset = Card.objects.all().prefetch_related('dishes')
+    serializer_class = CardSerializer
+
+
+class CardAPIList(EmenuCardAPIMixin, generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class CardAPIDetail(EmenuCardAPIMixin, generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+
+class EmenuDishAPIMixin():
+    queryset = Dish.objects.all().prefetch_related('cards')
+    serializer_class = DishSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class DishAPIList(EmenuDishAPIMixin, generics.ListCreateAPIView): pass
+
+
+class DishAPIDetail(EmenuDishAPIMixin, generics.RetrieveUpdateDestroyAPIView):
+    pass
 

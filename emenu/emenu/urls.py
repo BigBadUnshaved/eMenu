@@ -24,6 +24,7 @@ from django.views.generic.base import RedirectView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('card/', include('card.urls'), name='card'),
+    path('api/', include('card.api_urls'), name='api'),
     path('login/', LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('', RedirectView.as_view(pattern_name='card-list'), name='home'),

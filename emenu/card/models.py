@@ -50,7 +50,7 @@ class Dish(EmenuModel):
             Card,
             blank=True,
             related_name='dishes',
-            related_query_name='dish',
+            related_query_name='dishes',
 
     )
     price = models.DecimalField(
