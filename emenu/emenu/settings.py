@@ -38,9 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
+    'django_filters',
     'rest_framework',
     'rest_framework_swagger',
-    'debug_toolbar',
     'card',
 ]
 
@@ -160,4 +161,12 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'emenu.tasks.send_email_report',
         'schedule': crontab(hour=10, minute=0),
     },
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 50,
+    'DEFAULT_FILTER_BACKEND': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ]
 }

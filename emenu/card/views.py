@@ -163,18 +163,53 @@ class DishDeleteView(EmenuLoginRequiredMixin, DeleteView):
 
 
 
+from django_filters import rest_framework as filters
+from django.shortcuts import get_object_or_404
 from rest_framework import status, generics, permissions
+from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.views import APIView
 from card.serializers import CardSerializer, DishSerializer
 
 class EmenuCardAPIMixin():
-    queryset = Card.objects.all().prefetch_related('dishes')
     serializer_class = CardSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        queryset = Card.objects.all()\
+                .prefetch_related('dishes')\
+                .annotate(dishes_count=Count('dishes'))
+        if not self.request.user.is_authenticated:
+            queryset = Card.objects.exclude(dishes__isnull=True)
+        return queryset
+
+
+class CardAPIListFilterSet(filters.FilterSet):
+    creation_date = filters.DateTimeFromToRangeFilter()
+    last_change_date = filters.DateTimeFromToRangeFilter()
+
+    class Meta:
+        model = Card
+        fields = ['name', 'creation_date', 'last_change_date']
 
 
 class CardAPIList(EmenuCardAPIMixin, generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    filter_backends = [filters.DjangoFilterBackend, OrderingFilter]
+    filterset_class = CardAPIListFilterSet
+    ordering_fields = ['name', 'dishes_count']
+
+
+class CardAPITemplateList(EmenuCardAPIMixin, generics.ListCreateAPIView):
+    filter_backends = [filters.DjangoFilterBackend, OrderingFilter]
+    filterset_class = CardAPIListFilterSet
+    ordering_fields = ['name', 'dishes_count']
+    template_name = 'card_list2.html'
+    renderer_classes = [TemplateHTMLRenderer]
+
+    def get(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        return Response({'object_list': self.object_list})
 
 
 class CardAPIDetail(EmenuCardAPIMixin, generics.RetrieveUpdateDestroyAPIView):

@@ -3,23 +3,43 @@ from rest_framework import serializers
 from card.models import Card, Dish
 
 
-class DishSerializer(serializers.ModelSerializer):
+class DishSerializer(serializers.HyperlinkedModelSerializer):
+    cards = serializers.HyperlinkedRelatedField(
+        many=True, view_name='card-detail', read_only=True)
+
     class Meta:
         model = Dish
         fields = [
-            'id', 'description', 'creation_date', 'last_change_date',
-            'price', 'preparation_time', 'is_vegetarian', 'cards'
+            'url',
+            'id',
+            'name',
+            'description',
+            'creation_date',
+            'last_change_date',
+            'price',
+            'preparation_time',
+            'is_vegetarian',
+            'cards'
         ]
         extra_kwargs = {'cards': {'required': False}}
 
 
-class CardSerializer(serializers.ModelSerializer):
-    dishes = DishSerializer(many=True, read_only=True)
+class CardSerializer(serializers.HyperlinkedModelSerializer):
+    dishes = serializers.HyperlinkedRelatedField(
+        many=True, view_name='dish-detail', read_only=True)
+    dishes_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Card
         fields = [
-            'id', 'description', 'creation_date', 'last_change_date', 'dishes'
+            'url',
+            'id',
+            'name',
+            'description',
+            'creation_date',
+            'last_change_date',
+            'dishes',
+            'dishes_count',
         ]
         extra_kwargs = {'dishes': {'required': False}}
 
