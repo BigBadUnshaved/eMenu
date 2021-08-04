@@ -11,6 +11,8 @@ services:
       - PGTZ='GMT+2'
     volumes:
       - ./db:/docker-entrypoint-initdb.dt/
+  redis:
+    image: redis:alpine
   emenu:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
@@ -23,3 +25,28 @@ services:
       - "8000:8000"
     depends_on:
       - db
+      - redis
+  celery:
+    build: .
+    command: celery -A emenu worker -l info
+    volumes:
+      - .:/usr/src/emenu/
+    environment:
+      - DEBUG=1
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    depends_on:
+      - db
+      - emenu
+      - redis
+  celery-beat:
+    build: .
+    command: celery -A emenu beat -l info
+    volumes:
+      - .:/usr/src/emenu/
+    environment:
+      - DEBUG=1
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    depends_on:
+      - db
+      - emenu
+      - redis
