@@ -16,7 +16,6 @@ We would like to report there have been no changes to the dishes in eMenu
 Have a nice day,
 eMenu
 '''
-
 EMAIL_REPORT_TEMPLATE = '''
 Good morning!
 
@@ -27,8 +26,8 @@ Here is the list of dishes changed yesterday:
 Have a nice day,
 eMenu
 '''
-
 EMAIL_FROM = 'admin@emenu.com'
+
 
 def get_boundry_dates():
     '''
@@ -64,6 +63,7 @@ def get_dish_report_line(dish):
         suffix = 'not currently found on any menu cards'
     line = '{} {}\nCurrent description: {}\n'
     return line.format(dish, suffix, dish.description)
+
 
 class Command(BaseCommand):
     help = '''Send e-mail to all users with a list of dishes '''\
