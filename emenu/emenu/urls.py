@@ -20,7 +20,7 @@ urlpatterns = [
             title='eMenu',
             description='API for managing menu cards',
             version='1.0.0',
-        ), name='openapi-schema'
+        ), name='openapi'
     ),
     path('swagger-ui/', TemplateView.as_view(
         template_name='swagger-ui.html',

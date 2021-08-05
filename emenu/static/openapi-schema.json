@@ -1,0 +1,1229 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "eMenu",
+        "version": "1.0.0",
+        "description": "API for managing menu cards"
+    },
+    "paths": {
+        "/api/cards/": {
+            "get": {
+                "operationId": "listCards",
+                "description": "Create new card or list all menu cards using django rest api view;<br>accepts following get parameters:<br>'name' - equal to Card.objects.filter(name=value)<br>'creation_date_after' - Card.objects.filter(creation_date__gte=value)<br>'creation_date_before' - Card.objects.filter(creation_date__gte=value)<br>'last_change_date_after' - Card.objects.filter(last_change_date__gte=value)<br>'last_change_date_before' - Card.objects.filter(last_change_date__gte=value)<br>'ordering': orders the queryset depending on provided value:<br>  'name' - by name (ascending)<br>  'name' - by name (descending<br>  'dishes_count' - by number of dishes (ascending)<br>  '-dishes_count' - by number of dishes (descending),",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "required": false,
+                        "in": "query",
+                        "description": "A page number within the paginated result set.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "required": false,
+                        "in": "query",
+                        "description": "name",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "creation_date",
+                        "required": false,
+                        "in": "query",
+                        "description": "creation_date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "last_change_date",
+                        "required": false,
+                        "in": "query",
+                        "description": "last_change_date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "count": {
+                                            "type": "integer",
+                                            "example": 123
+                                        },
+                                        "next": {
+                                            "type": "string",
+                                            "nullable": true,
+                                            "format": "uri",
+                                            "example": "http://api.example.org/accounts/?page=4"
+                                        },
+                                        "previous": {
+                                            "type": "string",
+                                            "nullable": true,
+                                            "format": "uri",
+                                            "example": "http://api.example.org/accounts/?page=2"
+                                        },
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Card"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            },
+            "post": {
+                "operationId": "createCard",
+                "description": "Create new card or list all menu cards using django rest api view;<br>accepts following get parameters:<br>'name' - equal to Card.objects.filter(name=value)<br>'creation_date_after' - Card.objects.filter(creation_date__gte=value)<br>'creation_date_before' - Card.objects.filter(creation_date__gte=value)<br>'last_change_date_after' - Card.objects.filter(last_change_date__gte=value)<br>'last_change_date_before' - Card.objects.filter(last_change_date__gte=value)<br>'ordering': orders the queryset depending on provided value:<br>  'name' - by name (ascending)<br>  'name' - by name (descending<br>  'dishes_count' - by number of dishes (ascending)<br>  '-dishes_count' - by number of dishes (descending),",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Card"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/cards{format}": {
+            "get": {
+                "operationId": "retrieveCard",
+                "description": "Create new card or list all menu cards using django rest api view;<br>accepts following get parameters:<br>'name' - equal to Card.objects.filter(name=value)<br>'creation_date_after' - Card.objects.filter(creation_date__gte=value)<br>'creation_date_before' - Card.objects.filter(creation_date__gte=value)<br>'last_change_date_after' - Card.objects.filter(last_change_date__gte=value)<br>'last_change_date_before' - Card.objects.filter(last_change_date__gte=value)<br>'ordering': orders the queryset depending on provided value:<br>  'name' - by name (ascending)<br>  'name' - by name (descending<br>  'dishes_count' - by number of dishes (ascending)<br>  '-dishes_count' - by number of dishes (descending),",
+                "parameters": [
+                    {
+                        "name": "format",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "required": false,
+                        "in": "query",
+                        "description": "name",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "creation_date",
+                        "required": false,
+                        "in": "query",
+                        "description": "creation_date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "last_change_date",
+                        "required": false,
+                        "in": "query",
+                        "description": "last_change_date",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Card"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            },
+            "post": {
+                "operationId": "createCard",
+                "description": "Create new card or list all menu cards using django rest api view;<br>accepts following get parameters:<br>'name' - equal to Card.objects.filter(name=value)<br>'creation_date_after' - Card.objects.filter(creation_date__gte=value)<br>'creation_date_before' - Card.objects.filter(creation_date__gte=value)<br>'last_change_date_after' - Card.objects.filter(last_change_date__gte=value)<br>'last_change_date_before' - Card.objects.filter(last_change_date__gte=value)<br>'ordering': orders the queryset depending on provided value:<br>  'name' - by name (ascending)<br>  'name' - by name (descending<br>  'dishes_count' - by number of dishes (ascending)<br>  '-dishes_count' - by number of dishes (descending),",
+                "parameters": [
+                    {
+                        "name": "format",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Card"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/cards/{id}/": {
+            "get": {
+                "operationId": "retrieveCard",
+                "description": "View, edit or delete specific card using django rest api view",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Card"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            },
+            "put": {
+                "operationId": "updateCard",
+                "description": "View, edit or delete specific card using django rest api view",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Card"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            },
+            "patch": {
+                "operationId": "partialUpdateCard",
+                "description": "View, edit or delete specific card using django rest api view",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Card"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            },
+            "delete": {
+                "operationId": "destroyCard",
+                "description": "View, edit or delete specific card using django rest api view",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/cards/{id}{format}": {
+            "get": {
+                "operationId": "retrieveCard",
+                "description": "View, edit or delete specific card using django rest api view",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Card"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            },
+            "put": {
+                "operationId": "updateCard",
+                "description": "View, edit or delete specific card using django rest api view",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Card"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            },
+            "patch": {
+                "operationId": "partialUpdateCard",
+                "description": "View, edit or delete specific card using django rest api view",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Card"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            },
+            "delete": {
+                "operationId": "destroyCard",
+                "description": "View, edit or delete specific card using django rest api view",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/dishes/": {
+            "get": {
+                "operationId": "listDishs",
+                "description": "Create new dish or list all dishes using django rest api view",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "required": false,
+                        "in": "query",
+                        "description": "A page number within the paginated result set.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "count": {
+                                            "type": "integer",
+                                            "example": 123
+                                        },
+                                        "next": {
+                                            "type": "string",
+                                            "nullable": true,
+                                            "format": "uri",
+                                            "example": "http://api.example.org/accounts/?page=4"
+                                        },
+                                        "previous": {
+                                            "type": "string",
+                                            "nullable": true,
+                                            "format": "uri",
+                                            "example": "http://api.example.org/accounts/?page=2"
+                                        },
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Dish"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            },
+            "post": {
+                "operationId": "createDish",
+                "description": "Create new dish or list all dishes using django rest api view",
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Dish"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Dish"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Dish"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Dish"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/dishes{format}": {
+            "get": {
+                "operationId": "retrieveDish",
+                "description": "Create new dish or list all dishes using django rest api view",
+                "parameters": [
+                    {
+                        "name": "format",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Dish"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            },
+            "post": {
+                "operationId": "createDish",
+                "description": "Create new dish or list all dishes using django rest api view",
+                "parameters": [
+                    {
+                        "name": "format",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Dish"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Dish"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Dish"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Dish"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/dishes/{id}/": {
+            "get": {
+                "operationId": "retrieveDish",
+                "description": "View, edit or delete specific dish using django rest api view",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "A unique integer value identifying this dish.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Dish"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            },
+            "put": {
+                "operationId": "updateDish",
+                "description": "View, edit or delete specific dish using django rest api view",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "A unique integer value identifying this dish.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Dish"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Dish"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Dish"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Dish"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            },
+            "patch": {
+                "operationId": "partialUpdateDish",
+                "description": "View, edit or delete specific dish using django rest api view",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "A unique integer value identifying this dish.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Dish"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Dish"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Dish"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Dish"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            },
+            "delete": {
+                "operationId": "destroyDish",
+                "description": "View, edit or delete specific dish using django rest api view",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "A unique integer value identifying this dish.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            }
+        },
+        "/api/dishes/{id}{format}": {
+            "get": {
+                "operationId": "retrieveDish",
+                "description": "View, edit or delete specific dish using django rest api view",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "A unique integer value identifying this dish.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Dish"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            },
+            "put": {
+                "operationId": "updateDish",
+                "description": "View, edit or delete specific dish using django rest api view",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "A unique integer value identifying this dish.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Dish"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Dish"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Dish"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Dish"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            },
+            "patch": {
+                "operationId": "partialUpdateDish",
+                "description": "View, edit or delete specific dish using django rest api view",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "A unique integer value identifying this dish.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Dish"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Dish"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Dish"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Dish"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            },
+            "delete": {
+                "operationId": "destroyDish",
+                "description": "View, edit or delete specific dish using django rest api view",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "A unique integer value identifying this dish.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "path",
+                        "required": true,
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "api"
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Card": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "description": {
+                        "type": "string",
+                        "maxLength": 1500
+                    },
+                    "creation_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "last_change_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "dishes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "readOnly": true
+                    },
+                    "dishes_count": {
+                        "type": "integer",
+                        "readOnly": true
+                    }
+                },
+                "required": [
+                    "name"
+                ]
+            },
+            "Dish": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "description": {
+                        "type": "string",
+                        "maxLength": 1500
+                    },
+                    "creation_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "last_change_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "price": {
+                        "type": "string",
+                        "format": "decimal",
+                        "multipleOf": 0.01,
+                        "maximum": 100000000,
+                        "minimum": [
+                            "0"
+                        ],
+                        "description": "in PLN"
+                    },
+                    "preparation_time": {
+                        "type": "integer",
+                        "maximum": 32767,
+                        "description": "in minutes",
+                        "minimum": 0
+                    },
+                    "is_vegetarian": {
+                        "type": "boolean"
+                    },
+                    "cards": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "readOnly": true
+                    }
+                },
+                "required": [
+                    "name",
+                    "price",
+                    "preparation_time"
+                ]
+            }
+        }
+    }
+}
