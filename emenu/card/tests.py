@@ -409,9 +409,9 @@ class CardListTest(TestCase):
         )
 
         for obj in object_list:
-            date = obj.creation_date
-            self.assertEqual(date.date()>=yesterday.date(), True)
-            self.assertEqual(date.date()<=now.date(), True)
+            date = obj.creation_date.date()
+            self.assertEqual(date>=yesterday.date(), True)
+            self.assertEqual(date<=now.date(), True)
 
     def test_list_filter_last_change_date_range(self):
         now = get_current_datetime()
@@ -427,9 +427,9 @@ class CardListTest(TestCase):
         )
 
         for obj in object_list:
-            date = obj.last_change_date
-            self.assertEqual(date.date()>=yesterday.date(), True)
-            self.assertEqual(date.date()<=now.date(), True)
+            date = obj.last_change_date.date()
+            self.assertEqual(date>=yesterday.date(), True)
+            self.assertEqual(date<=now.date(), True)
 
     def test_list_ordering_name_asc(self):
         request = self.factory.get('/card/?order_by=name')
