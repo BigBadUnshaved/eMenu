@@ -6,6 +6,7 @@ import json
 from pytz import timezone
 from unittest import mock
 
+from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AnonymousUser, User
 from django.core.exceptions import ValidationError
@@ -16,6 +17,8 @@ from django.test import TestCase, RequestFactory
 from .models import Card, Dish
 from card import views, api_views
 
+
+TIME_ZONE = getattr(settings, 'TIME_ZONE', 'Europe/Warsaw')
 
 base_user_kwargs = {
     'username': 'test_user_{}',
@@ -41,7 +44,7 @@ base_dish_kwargs = {
 }
 
 def get_current_datetime():
-    return datetime.now(timezone('Europe/Warsaw'))
+    return datetime.now(timezone(TIME_ZONE))
 
 def datetime_to_get_param(date):
     return date.strftime('%Y-%m-%d')
@@ -50,7 +53,7 @@ def str_date_to_datetime(str_date):
     str_date, str_time = str_date[:10], str_date[12:19]
     date_args = chain(str_date.split('-'), str_time.split(':'))
     int_list = (int(i) for i in date_args)
-    return datetime(*int_list, tzinfo=timezone('Europe/Warsaw'))
+    return datetime(*int_list, tzinfo=timezone(TIME_ZONE))
 
 def create_cards(arg, card_list):
     card_kwargs = copy(base_card_kwargs)
@@ -278,9 +281,9 @@ class CardAPIListTest(TestCase):
                 content_json, 'creation_date'
         )
         for str_date in creation_date_str_list:
-            date = str_date_to_datetime(str_date)
-            self.assertEqual(date>=yesterday, True)
-            self.assertEqual(date<=now, True)
+            date = str_date_to_datetime(str_date).date()
+            self.assertEqual(date>=yesterday.date(), True)
+            self.assertEqual(date<=now.date(), True)
 
     def test_list_filter_last_change_date_range(self):
         now = get_current_datetime()
@@ -296,9 +299,9 @@ class CardAPIListTest(TestCase):
                 content_json, 'last_change_date'
         )
         for str_date in creation_date_str_list:
-            date = str_date_to_datetime(str_date)
-            self.assertEqual(date>=yesterday, True)
-            self.assertEqual(date<=now, True)
+            date = str_date_to_datetime(str_date).date()
+            self.assertEqual(date>=yesterday.date(), True)
+            self.assertEqual(date<=now.date(), True)
 
     def test_list_ordering_name_asc(self):
         request = self.factory.get('/api/cards/?ordering=name')
