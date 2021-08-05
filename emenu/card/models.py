@@ -5,6 +5,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.urls import reverse
 
+
 def assert_text_field_length(obj, field_name='description'):
     '''
     Checks if for the given object the value assigned to the provided 
@@ -21,6 +22,7 @@ def assert_text_field_length(obj, field_name='description'):
         message = 'Length of {} cannot exceed {} characters (current: {})'
         message = message.format(field_name, max_length, value_len)
         raise ValidationError(message)
+
 
 class EmenuModel(models.Model):
     '''
@@ -53,7 +55,7 @@ class Card(EmenuModel):
     '''
     Model that corresponds to a single menu card.
     '''
-    pass
+
 
 class Dish(EmenuModel):
     '''
