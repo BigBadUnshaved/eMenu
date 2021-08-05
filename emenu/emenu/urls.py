@@ -5,7 +5,6 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import include, path
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
-from rest_framework.schemas import get_schema_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -16,12 +15,6 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('', RedirectView.as_view(pattern_name='card-list'), name='home'),
     path('__debug__', include(debug_toolbar.urls)),
-    path('openapi', get_schema_view(
-            title='eMenu',
-            description='API for managing menu cards',
-            version='1.0.0',
-        ), name='openapi'
-    ),
     path('swagger-ui/', TemplateView.as_view(
         template_name='swagger-ui.html',
         extra_context={'schema_url':'openapi-schema'}
