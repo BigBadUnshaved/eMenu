@@ -15,6 +15,7 @@ from django.views.generic.edit import FormMixin
 from .forms import CardListForm
 from .models import Card, Dish
 
+
 def fmt_str_to_date(date_as_str):
     '''
     Creates datetime from a string in one of the following formats:
