@@ -1,15 +1,12 @@
 from django.db.models import Count
 
 from django_filters import rest_framework as filters
-from django.shortcuts import get_object_or_404
-from rest_framework import status, generics, permissions
+from rest_framework import generics, permissions
 from rest_framework.filters import OrderingFilter
-from rest_framework.response import Response
-from rest_framework.renderers import TemplateHTMLRenderer
-from rest_framework.views import APIView
 
 from card.serializers import CardSerializer, DishSerializer
 from card.models import Card, Dish
+
 
 class EmenuCardAPIMixin():
     '''
