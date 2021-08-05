@@ -16,6 +16,7 @@ from django.test import TestCase, RequestFactory
 from .models import Card, Dish
 from card import views, api_views
 
+
 base_user_kwargs = {
     'username': 'test_user_{}',
     'first_name': '',
@@ -88,6 +89,7 @@ def get_init_data(dishes=True, cards=True, users=True):
 def get_values_from_json(json_response, value):
     return [i[value] for i in json_response['results']]
 
+
 class CardTestCase(TestCase):
     def setUp(self):
         get_init_data(users=False)
@@ -106,7 +108,6 @@ class CardTestCase(TestCase):
         expected_message = 'value too long for type character varying(50)'
         with self.assertRaisesMessage(DataError, expected_message):
             Card.objects.create(**card_kwargs)
-        
 
     def test_card_description_length_validation(self):
         card_kwargs = copy(base_card_kwargs)
@@ -154,6 +155,7 @@ class CardTestCase(TestCase):
             card.last_change_date = now + timedelta(5)
             card.save()
             self.assertEqual(card.last_change_date, now)
+
 
 class DishTestCase(TestCase):
     def setUp(self):
@@ -343,6 +345,7 @@ class CardAPIListTest(TestCase):
         response = api_views.CardAPIList.as_view()(request)
         self.assertEqual(response.status_code, 403)
 
+
 class CardAPIDetailTest(TestCase):
     def setUp(self):
         get_init_data(dishes=False, cards=False)
@@ -473,3 +476,4 @@ class CardListTest(TestCase):
                 dishes_count_list,
                 sorted(dishes_count_list, reverse=True)
         )
+
