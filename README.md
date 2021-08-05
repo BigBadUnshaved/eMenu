@@ -32,7 +32,8 @@ Krótko o przestrzeni nazw url projektu
 
 /card/       - widoki powstałe przy użyciu django.views.generic, używane do renderowania wersji serwisu
                przystępniejszej dla przeciętnego użytkownika; ostrzeżenie: działanie i nazwy części parametrów 
-               get użytych do filtrowania listy kart menu (obiekt Card) różni się od tych użytych w wersji /api/
+               get użytych do filtrowania listy kart menu (obiekt Card) różni się od tych użytych w wersji /api/.
+               Użyto gotowego wzorca css ramayana wykonanego przez Template Mo.
                
 /swagger-ui/ - dokumentacja wygenerowana przez swagger'a; z powodu konfliktów jakie pyyaml potrafi spowodować
                gdy się w modelach korzysta z DecimalField, automatycznie generowany plik schemy generował
