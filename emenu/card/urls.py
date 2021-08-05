@@ -9,7 +9,7 @@ urlpatterns = [
     path('new/', views.CardCreateView.as_view(), name='card-ui-create'),
     path('<int:pk>/edit/', views.CardUpdateView.as_view(), name='card-ui-edit'),
     path('<int:pk>/delete/', views.CardDeleteView.as_view(),
-        name='card-delete'
+        name='card-ui-delete'
     ),
     path('dish', views.DishListView.as_view(), name='dish-ui-list'),
     path('dish/<int:pk>/', views.DishDetailView.as_view(), name='dish-ui-detail'),

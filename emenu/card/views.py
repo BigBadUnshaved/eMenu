@@ -315,23 +315,23 @@ class CardAPIDetail(EmenuCardAPIMixin, generics.RetrieveUpdateDestroyAPIView):
     '''
     View, edit or delete specific card using django rest api view
     '''
-    pass
 
 
 class EmenuDishAPIMixin():
     '''
     Custom mixin for django-rest Dish views that contains shared data
     '''
-    queryset = Dish.objects.all().prefetch_related('cards')
     serializer_class = DishSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Dish.objects.all().prefetch_related('cards')
 
 
 class DishAPIList(EmenuDishAPIMixin, generics.ListCreateAPIView):
     '''
     Create new dish or list all dishes using django rest api view
     '''
-    pass
 
 
 class DishAPIDetail(EmenuDishAPIMixin, generics.RetrieveUpdateDestroyAPIView):

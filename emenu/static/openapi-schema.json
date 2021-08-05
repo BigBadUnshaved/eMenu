@@ -3,7 +3,7 @@
     "info": {
         "title": "eMenu",
         "version": "1.0.0",
-        "description": "API for managing menu cards"
+	"description": "API for managing menu cards"
     },
     "paths": {
         "/api/cards/": {
@@ -781,7 +781,7 @@
                         "name": "id",
                         "in": "path",
                         "required": true,
-                        "description": "A unique integer value identifying this dish.",
+                        "description": "",
                         "schema": {
                             "type": "string"
                         }
@@ -811,7 +811,7 @@
                         "name": "id",
                         "in": "path",
                         "required": true,
-                        "description": "A unique integer value identifying this dish.",
+                        "description": "",
                         "schema": {
                             "type": "string"
                         }
@@ -860,7 +860,7 @@
                         "name": "id",
                         "in": "path",
                         "required": true,
-                        "description": "A unique integer value identifying this dish.",
+                        "description": "",
                         "schema": {
                             "type": "string"
                         }
@@ -909,7 +909,7 @@
                         "name": "id",
                         "in": "path",
                         "required": true,
-                        "description": "A unique integer value identifying this dish.",
+                        "description": "",
                         "schema": {
                             "type": "string"
                         }
@@ -934,7 +934,7 @@
                         "name": "id",
                         "in": "path",
                         "required": true,
-                        "description": "A unique integer value identifying this dish.",
+                        "description": "",
                         "schema": {
                             "type": "string"
                         }
@@ -973,7 +973,7 @@
                         "name": "id",
                         "in": "path",
                         "required": true,
-                        "description": "A unique integer value identifying this dish.",
+                        "description": "",
                         "schema": {
                             "type": "string"
                         }
@@ -1031,7 +1031,7 @@
                         "name": "id",
                         "in": "path",
                         "required": true,
-                        "description": "A unique integer value identifying this dish.",
+                        "description": "",
                         "schema": {
                             "type": "string"
                         }
@@ -1089,7 +1089,7 @@
                         "name": "id",
                         "in": "path",
                         "required": true,
-                        "description": "A unique integer value identifying this dish.",
+                        "description": "",
                         "schema": {
                             "type": "string"
                         }
@@ -1120,12 +1120,12 @@
             "Card": {
                 "type": "object",
                 "properties": {
-                    "url": {
-                        "type": "string",
-                        "readOnly": true
-                    },
                     "id": {
                         "type": "integer",
+                        "readOnly": true
+                    },
+                    "url": {
+                        "type": "string",
                         "readOnly": true
                     },
                     "name": {
@@ -1150,8 +1150,7 @@
                         "type": "array",
                         "items": {
                             "type": "string"
-                        },
-                        "readOnly": true
+                        }
                     },
                     "dishes_count": {
                         "type": "integer",
@@ -1159,18 +1158,19 @@
                     }
                 },
                 "required": [
-                    "name"
+                    "name",
+                    "dishes"
                 ]
             },
             "Dish": {
                 "type": "object",
                 "properties": {
-                    "url": {
-                        "type": "string",
-                        "readOnly": true
-                    },
                     "id": {
                         "type": "integer",
+                        "readOnly": true
+                    },
+                    "url": {
+                        "type": "string",
                         "readOnly": true
                     },
                     "name": {
@@ -1214,14 +1214,14 @@
                         "type": "array",
                         "items": {
                             "type": "string"
-                        },
-                        "readOnly": true
+                        }
                     }
                 },
                 "required": [
                     "name",
                     "price",
-                    "preparation_time"
+                    "preparation_time",
+                    "cards"
                 ]
             }
         }
