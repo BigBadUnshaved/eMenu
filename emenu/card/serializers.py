@@ -51,13 +51,13 @@ class CardSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CardDetailSerializer(serializers.HyperlinkedModelSerializer):
-    edit_dishes = serializers.HyperlinkedRelatedField(
+    dishes = DishSerializer(many=True, read_only=True)
+    linked_dishes = serializers.HyperlinkedRelatedField(
         queryset=Dish.objects.all(),
         many=True,
         view_name='dish-detail',
-        write_only=True
+        source='dishes',
     )
-    dishes = DishSerializer(many=True)
     dishes_count = serializers.IntegerField(read_only=True)
 
     class Meta:
@@ -70,9 +70,8 @@ class CardDetailSerializer(serializers.HyperlinkedModelSerializer):
             'creation_date',
             'last_change_date',
             'dishes_count',
-            'edit_dishes',
+            'linked_dishes',
             'dishes',
         ]
         extra_kwargs = {'dishes': {'required': False}}
-
 
