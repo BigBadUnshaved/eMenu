@@ -1,16 +1,26 @@
 {% extends "base.html" %}
+{% load static %}
+{% load rest_framework %}
 {% block content %}
-	{% if user.is_authenticated %}
-	<div class="col-md-3">
-	 <div class="border-rectangle-button">
-	    <a href="{% url 'card-ui-create' %}"></i>Create new menu card</a>
-	 </div>
-	</div>
-	{% endif %}
-     <form action="{% url 'card-ui-list' %}" method="get">
-    {{form}}
-    <button type="submit">Filter</button>
-    </form>
+
+    <div style='inline'>
+      <div class="col-md-3">
+      {% if user.is_authenticated %}
+        <div class="border-rectangle-button">
+           <a href="{% url 'card-ui-create' %}"></i>Create new menu card</a>
+        </div>
+      {% endif %}
+      <div class="col-md-3">
+        <button data-toggle="modal" data-target="#filtersModal" class="btn btn-default">
+          Filters
+        </button>
+        {{filter_form}}
+      </div>
+      </div>
+    </div>
+
+
+
     <div class="default-table">
       <table>
 	<thead>

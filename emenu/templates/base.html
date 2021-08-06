@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+{% block head %}
   <head>
 
     <meta charset="utf-8">
@@ -13,6 +14,7 @@
 
     <!-- Bootstrap core CSS -->
     {% load static %}
+    {% load rest_framework %}
     <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 
 <!--
@@ -25,7 +27,11 @@ https://templatemo.com/tm-529-ramayana
     <link rel="stylesheet" href="{% static 'assets/css/templatemo-style.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/owl.css' %}">
 
+   <link rel="stylesheet" type="text/css" href="{% static "rest_framework/css/prettify.css" %}"/>
+   <link rel="stylesheet" type="text/css" href="{% static "rest_framework/css/default.css" %}"/>
+
   </head>
+{% endblock %}
 
 <body class="is-preload">
 
@@ -101,6 +107,7 @@ https://templatemo.com/tm-529-ramayana
 
   <!-- Scripts -->
   <!-- Bootstrap core JavaScript -->
+  {% block script %}
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
@@ -109,6 +116,24 @@ https://templatemo.com/tm-529-ramayana
     <script src="{% static 'assets/js/transition.js' %}"></script>
     <script src="{% static 'assets/js/owl-carousel.js' %}"></script>
     <script src="{% static 'assets/js/custom.js' %}"></script>
+      <script>
+        window.drf = {
+          csrfHeaderName: "{{ csrf_header_name|default:'X-CSRFToken' }}",
+          csrfToken: "{% if request %}{{ csrf_token }}{% endif %}"
+        };
+      </script>
+      <script src="{% static "rest_framework/js/jquery-3.5.1.min.js" %}"></script>
+      <script src="{% static "rest_framework/js/ajax-form.js" %}"></script>
+      <script src="{% static "rest_framework/js/csrf.js" %}"></script>
+      <script src="{% static "rest_framework/js/bootstrap.min.js" %}"></script>
+      <script src="{% static "rest_framework/js/prettify-min.js" %}"></script>
+      <script src="{% static "rest_framework/js/default.js" %}"></script>
+      <script>
+        $(document).ready(function() {
+          $('form').ajaxForm();
+        });
+      </script>
+  {% endblock %}
 </body>
 
 
