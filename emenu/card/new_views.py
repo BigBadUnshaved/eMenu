@@ -55,3 +55,11 @@ class CardListView(EmenuMixin, api_views.EmenuCardAPIMixin, generics.ListAPIView
     filterset_class = api_views.CardAPIListFilterSet
     ordering_fields = ['name', 'dishes_count']
     template_name = 'card_list.html'
+
+class CardCreateView(EmenuMixin, api_views.EmenuCardAPIMixin, generics.CreateAPIView):
+    '''
+    View to create new card menu objects
+    '''
+    serializer_class = CardDetailSerializer
+    template_name = 'edit_form.html'
+

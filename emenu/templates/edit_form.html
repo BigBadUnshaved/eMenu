@@ -1,7 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
+
+<!-- TODO: redirect on success -->
+{% if post_form %}
 <form method="post">{% csrf_token %}
-   {{form.as_p}}
+   {{post_form}}
    <input type="submit" value="Save">
 </form>
+{% endif %}
+
+{% if put_form %}
+<form method="put">{% csrf_token %}
+   {{put_form}}
+   <input type="submit" value="Save">
+</form>
+{% endif %}
+
 {% endblock %}

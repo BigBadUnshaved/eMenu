@@ -7,7 +7,7 @@
       <div class="col-md-3">
       {% if user.is_authenticated %}
         <div class="border-rectangle-button">
-           <a href="{% url 'card-ui-create' %}"></i>Create new menu card</a>
+		<a href="{% url 'card-ui-create' %}?next={{request.path}}"></i>Create new menu card</a>
         </div>
       {% endif %}
       <div class="col-md-3">
