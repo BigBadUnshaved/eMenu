@@ -4,7 +4,8 @@ from django_filters import rest_framework as filters
 from rest_framework import generics, permissions
 from rest_framework.filters import OrderingFilter
 
-from card.serializers import CardSerializer, DishSerializer
+from card.serializers import (CardSerializer, CardDetailSerializer,
+        DishSerializer)
 from card.models import Card, Dish
 
 
@@ -12,7 +13,6 @@ class EmenuCardAPIMixin():
     '''
     Custom mixin for django-rest Card views that contains shared data
     '''
-    serializer_class = CardSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
@@ -57,6 +57,7 @@ class CardAPIList(EmenuCardAPIMixin, generics.ListCreateAPIView):
       'dishes_count' - by number of dishes (ascending)
       '-dishes_count' - by number of dishes (descending),
     '''
+    serializer_class = CardSerializer
     filter_backends = [filters.DjangoFilterBackend, OrderingFilter]
     filterset_class = CardAPIListFilterSet
     ordering_fields = ['name', 'dishes_count']
@@ -66,6 +67,7 @@ class CardAPIDetail(EmenuCardAPIMixin, generics.RetrieveUpdateDestroyAPIView):
     '''
     View, edit or delete specific card using django rest api view
     '''
+    serializer_class = CardDetailSerializer
 
 
 class EmenuDishAPIMixin():
