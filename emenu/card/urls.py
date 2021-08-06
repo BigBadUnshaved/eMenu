@@ -7,7 +7,7 @@ urlpatterns = [
     path('', new_views.CardListView.as_view(), name='card-ui-list'),
     path('<int:pk>/', views.CardDetailView.as_view(), name='card-ui-detail'),
     path('new/', new_views.CardCreateView.as_view(), name='card-ui-create'),
-    path('<int:pk>/edit/', views.CardUpdateView.as_view(), name='card-ui-edit'),
+    path('<int:pk>/edit/', new_views.CardUpdateView.as_view(), name='card-ui-edit'),
     path('<int:pk>/delete/', views.CardDeleteView.as_view(),
         name='card-ui-delete'
     ),

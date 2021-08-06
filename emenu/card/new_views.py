@@ -56,6 +56,7 @@ class CardListView(EmenuMixin, api_views.EmenuCardAPIMixin, generics.ListAPIView
     ordering_fields = ['name', 'dishes_count']
     template_name = 'card_list.html'
 
+
 class CardCreateView(EmenuMixin, api_views.EmenuCardAPIMixin, generics.CreateAPIView):
     '''
     View to create new card menu objects
@@ -63,3 +64,16 @@ class CardCreateView(EmenuMixin, api_views.EmenuCardAPIMixin, generics.CreateAPI
     serializer_class = CardDetailSerializer
     template_name = 'edit_form.html'
 
+
+class CardUpdateView(EmenuMixin, api_views.EmenuCardAPIMixin, generics.UpdateAPIView):
+    '''
+    View to edit specific card menu
+    '''
+    serializer_class = CardDetailSerializer
+    template_name = 'edit_form.html'
+
+
+class CardDeleteView(EmenuMixin, api_views.EmenuCardAPIMixin, generics.DestroyAPIView):
+    '''
+    View to delete given card menu object
+    '''
