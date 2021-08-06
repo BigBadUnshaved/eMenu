@@ -1,10 +1,10 @@
 from django.urls import path
 
-from . import views
+from . import views, new_views
 
 
 urlpatterns = [
-    path('', views.CardListView.as_view(), name='card-ui-list'),
+    path('', new_views.CardListView.as_view(), name='card-ui-list'),
     path('<int:pk>/', views.CardDetailView.as_view(), name='card-ui-detail'),
     path('new/', views.CardCreateView.as_view(), name='card-ui-create'),
     path('<int:pk>/edit/', views.CardUpdateView.as_view(), name='card-ui-edit'),

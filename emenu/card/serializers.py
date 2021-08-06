@@ -27,6 +27,34 @@ class DishSerializer(serializers.HyperlinkedModelSerializer):
         extra_kwargs = {'cards': {'required': False}}
 
 
+class DishListSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Dish
+        fields = [
+            'id',
+            'url',
+            'name',
+        ]
+
+class CardListSerializer(serializers.HyperlinkedModelSerializer):
+    dishes = DishListSerializer(many=True, read_only=True)
+    dishes_count = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = Card
+        fields = [
+            'id',
+            'url',
+            'name',
+            'description',
+            'creation_date',
+            'last_change_date',
+            'dishes',
+            'dishes_count',
+        ]
+        extra_kwargs = {'dishes': {'required': False}}
+
+
 class CardSerializer(serializers.HyperlinkedModelSerializer):
     dishes = serializers.HyperlinkedRelatedField(
         queryset=Dish.objects.all(),
