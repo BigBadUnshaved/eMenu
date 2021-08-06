@@ -19,9 +19,6 @@ class EmenuRenderer(BrowsableAPIRenderer):
         context = super().get_context(*args, **kwargs)
         content = json.loads(context.get('content', '{}'))
         object_list = content.get('results', [])
-        for i in object_list:
-            for k, v in i.items():
-                print(k, v)
         if object_list:
             context['object_list'] = object_list
             if len(object_list) == 1:
