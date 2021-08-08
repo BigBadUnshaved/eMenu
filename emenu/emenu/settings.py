@@ -133,7 +133,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 50,
     'DEFAULT_FILTER_BACKEND': [
         'django_filters.rest_framework.DjangoFilterBackend',
-    ]
+    ],
+    'DATETIME_FORMAT': "%d/%m/%Y %H:%M:%S",
 }
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
