@@ -1,5 +1,7 @@
 import json
 
+from django.http.response import HttpResponseRedirect
+from django.urls import reverse
 from django_filters import rest_framework as filters
 from rest_framework import generics
 from rest_framework.renderers import BrowsableAPIRenderer
@@ -72,8 +74,21 @@ class CardUpdateView(EmenuMixin, api_views.EmenuCardAPIMixin, generics.UpdateAPI
     serializer_class = CardDetailSerializer
     template_name = 'edit_form.html'
 
+    #TODO awfulness, find better way to get initial data in form
+    def get_serializer(self, *args, **kwargs):
+        instance = self.get_object()
+        kwargs['instance'] = self.get_object()
+        try:
+            return super().get_serializer(*args, **kwargs)
+        except TypeError as e:
+            msg = "__init__() got multiple values for argument 'instance'"
+            if str(e) == msg:
+                kwargs.pop('instance')
+                return super().get_serializer(*args, **kwargs)
+            raise e
 
 class CardDeleteView(EmenuMixin, api_views.EmenuCardAPIMixin, generics.DestroyAPIView):
     '''
     View to delete given card menu object
     '''
+
