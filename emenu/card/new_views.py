@@ -1,7 +1,5 @@
 import json
 
-from django.http.response import HttpResponseRedirect
-from django.urls import reverse
 from django_filters import rest_framework as filters
 from rest_framework import generics
 from rest_framework.renderers import BrowsableAPIRenderer
@@ -13,28 +11,56 @@ from card.serializers import (CardSerializer, CardDetailSerializer,
 
 
 class EmenuRenderer(BrowsableAPIRenderer):
+    '''
+    BrowsableAPIRenderer modified to be used with custom template
+    using syntax more similar to Django class based views
+    '''
     def __init__(self, template_name=None, *args, **kwargs):
         self.template=template_name
         return super().__init__(*args, **kwargs)
 
     def get_context(self, *args, **kwargs):
         context = super().get_context(*args, **kwargs)
+        content = context.get('content', '')
+        if content.strip() == '':
+            return context
         content = json.loads(context.get('content', '{}'))
         object_list = content.get('results', [])
         if object_list:
             context['object_list'] = object_list
-            if len(object_list) == 1:
-                context['object'] = object_list[0]
+        else:
+            context['object'] = content
         return context
 
 
 class EmenuMixin():
+    '''
+    Mixin to overwrite template used by BrowsableAPIRenderer
+    '''
     template_name = None
 
     def get_renderers(self, *args, **kwargs):
         if self.template_name:
             return [EmenuRenderer(self.template_name)]
         return super().get_renderers(*args, **kwargs)
+
+
+class EmenuSingleObjectMixin(EmenuMixin):
+    '''
+    Version of EmenuMixin modified for views dedicated to a single object
+    '''
+    #TODO - get rid of this awfulness and find better way to get form init data
+    def get_serializer(self, *args, **kwargs):
+        instance = self.get_object()
+        kwargs['instance'] = self.get_object()
+        try:
+            return super().get_serializer(*args, **kwargs)
+        except TypeError as e:
+            msg = "__init__() got multiple values for argument 'instance'"
+            if str(e) == msg:
+                kwargs.pop('instance')
+                return super().get_serializer(*args, **kwargs)
+            raise e
 
 
 class CardListView(EmenuMixin, api_views.EmenuCardAPIMixin, generics.ListAPIView):
@@ -59,7 +85,8 @@ class CardListView(EmenuMixin, api_views.EmenuCardAPIMixin, generics.ListAPIView
     template_name = 'card_list.html'
 
 
-class CardCreateView(EmenuMixin, api_views.EmenuCardAPIMixin, generics.CreateAPIView):
+class CardCreateView(EmenuMixin, api_views.EmenuCardAPIMixin,
+        generics.CreateAPIView):
     '''
     View to create new card menu objects
     '''
@@ -67,28 +94,20 @@ class CardCreateView(EmenuMixin, api_views.EmenuCardAPIMixin, generics.CreateAPI
     template_name = 'edit_form.html'
 
 
-class CardUpdateView(EmenuMixin, api_views.EmenuCardAPIMixin, generics.UpdateAPIView):
+class CardRetrieveDestroyView(EmenuSingleObjectMixin,
+        api_views.EmenuCardAPIMixin, generics.RetrieveDestroyAPIView):
+    '''
+    View to view detail and delete specific card menu object
+    '''
+    serializer_class = CardDetailSerializer
+    template_name = 'card_detail.html'
+
+
+class CardUpdateView(EmenuSingleObjectMixin, api_views.EmenuCardAPIMixin,
+        generics.UpdateAPIView):
     '''
     View to edit specific card menu
     '''
     serializer_class = CardDetailSerializer
     template_name = 'edit_form.html'
-
-    #TODO awfulness, find better way to get initial data in form
-    def get_serializer(self, *args, **kwargs):
-        instance = self.get_object()
-        kwargs['instance'] = self.get_object()
-        try:
-            return super().get_serializer(*args, **kwargs)
-        except TypeError as e:
-            msg = "__init__() got multiple values for argument 'instance'"
-            if str(e) == msg:
-                kwargs.pop('instance')
-                return super().get_serializer(*args, **kwargs)
-            raise e
-
-class CardDeleteView(EmenuMixin, api_views.EmenuCardAPIMixin, generics.DestroyAPIView):
-    '''
-    View to delete given card menu object
-    '''
 
