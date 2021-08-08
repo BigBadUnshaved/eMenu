@@ -6,7 +6,7 @@ from . import views, new_views
 urlpatterns = [
     path('', new_views.CardListView.as_view(), name='card-ui-list'),
     path('<int:pk>/',
-        new_views.CardRetrieveDestroyView.as_view(),
+        new_views.CardDetailView.as_view(),
         name='card-ui-detail'
     ),
     path('new/', new_views.CardCreateView.as_view(), name='card-ui-create'),

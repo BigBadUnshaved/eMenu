@@ -63,7 +63,7 @@ class EmenuSingleObjectMixin(EmenuMixin):
             raise e
 
 
-class CardListView(EmenuMixin, api_views.EmenuCardAPIMixin, generics.ListAPIView):
+class CardListView(EmenuMixin, api_views.CardAPIList):
     '''
     Create new card or list all menu cards using django rest api view;
     accepts following get parameters:
@@ -78,15 +78,10 @@ class CardListView(EmenuMixin, api_views.EmenuCardAPIMixin, generics.ListAPIView
       'dishes_count' - by number of dishes (ascending)
       '-dishes_count' - by number of dishes (descending),
     '''
-    serializer_class = CardListSerializer
-    filter_backends = [filters.DjangoFilterBackend, OrderingFilter]
-    filterset_class = api_views.CardAPIListFilterSet
-    ordering_fields = ['name', 'dishes_count']
     template_name = 'card_list.html'
 
 
-class CardCreateView(EmenuMixin, api_views.EmenuCardAPIMixin,
-        generics.CreateAPIView):
+class CardCreateView(CardListView):
     '''
     View to create new card menu objects
     '''
@@ -94,7 +89,7 @@ class CardCreateView(EmenuMixin, api_views.EmenuCardAPIMixin,
     template_name = 'edit_form.html'
 
 
-class CardRetrieveDestroyView(EmenuSingleObjectMixin,
+class CardDetailView(EmenuSingleObjectMixin,
         api_views.EmenuCardAPIMixin, generics.RetrieveDestroyAPIView):
     '''
     View to view detail and delete specific card menu object
@@ -103,11 +98,10 @@ class CardRetrieveDestroyView(EmenuSingleObjectMixin,
     template_name = 'card_detail.html'
 
 
-class CardUpdateView(EmenuSingleObjectMixin, api_views.EmenuCardAPIMixin,
-        generics.UpdateAPIView):
+class CardUpdateView(EmenuSingleObjectMixin,
+        api_views.EmenuCardAPIMixin, generics.UpdateAPIView):
     '''
     View to edit specific card menu
     '''
     serializer_class = CardDetailSerializer
     template_name = 'edit_form.html'
-

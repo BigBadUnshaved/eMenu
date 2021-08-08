@@ -5,7 +5,7 @@ from rest_framework import generics, permissions
 from rest_framework.filters import OrderingFilter
 
 from card.serializers import (CardSerializer, CardDetailSerializer,
-        DishSerializer)
+        CardListSerializer, DishSerializer)
 from card.models import Card, Dish
 
 
@@ -57,7 +57,7 @@ class CardAPIList(EmenuCardAPIMixin, generics.ListCreateAPIView):
       'dishes_count' - by number of dishes (ascending)
       '-dishes_count' - by number of dishes (descending),
     '''
-    serializer_class = CardSerializer
+    serializer_class = CardListSerializer
     filter_backends = [filters.DjangoFilterBackend, OrderingFilter]
     filterset_class = CardAPIListFilterSet
     ordering_fields = ['name', 'dishes_count']
