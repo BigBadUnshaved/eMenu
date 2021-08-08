@@ -2,7 +2,8 @@
 
 Rozwiązanie zadania rekrutacyjnego dla www.cloudservices.pl z wymaganiami na końcu tego pliku.
 Aplikacja ta stanowi prototyp serwisu służacego jako restauracyjna karta menu online.
-
+Na branchu main znajduje się rozwiązanie oddane w terminie, branch 1.1 oraz 1.1-develop zawierają
+dalsze prace w celu poprawy błędów (funkcjonalnych i stylistycznych)
 
 Instrukcja Instalacji:
 
