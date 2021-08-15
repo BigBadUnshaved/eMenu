@@ -355,6 +355,16 @@ class CardListAbstractTest():
                 dishes_count_list, sorted(dishes_count_list, reverse=True)
         )
 
+    def test_list_create_permission_check(self):
+        data = {
+            'name': 'I should not exist',
+            'description': 'test_list_create_permission_check went wrong'
+        }
+        request = self.factory.post(self.url, data=data)
+        request.user = AnonymousUser()
+        response = self.view_class.as_view()(request)
+        self.assertEqual(response.status_code, 403)
+
 
 class CardAPIListTest(CardListAbstractTest, TestCase):
     def setUp(self):
