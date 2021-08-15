@@ -15,7 +15,7 @@ from django.db.utils import DataError, IntegrityError
 from django.test import TestCase, RequestFactory
 
 from .models import Card, Dish
-from card import views, api_views
+from card import views, api_views, new_views
 
 
 TIME_ZONE = getattr(settings, 'TIME_ZONE', 'Europe/Warsaw')
@@ -51,7 +51,7 @@ def datetime_to_get_param(date):
 
 def str_date_to_datetime(str_date):
     str_date, str_time = str_date[:10], str_date[12:19]
-    date_args = chain(str_date.split('-'), str_time.split(':'))
+    date_args = chain(reversed(str_date.split('/')), str_time.split(':'))
     int_list = (int(i) for i in date_args)
     return datetime(*int_list, tzinfo=timezone(TIME_ZONE))
 
@@ -89,7 +89,7 @@ def get_init_data(dishes=True, cards=True, users=True):
         for func in function_list:
             func(i, card_list)
 
-def get_values_from_json(json_response, value):
+def get_values_list(json_response, value):
     return [i[value] for i in json_response['results']]
 
 
@@ -242,28 +242,36 @@ class DishTestCase(TestCase):
         self.assertEqual(dish.is_vegetarian, False)
 
 
-class CardAPIListTest(TestCase):
+class CardListAbstractTest():
+    view_class = None
+    url = None
+
     def setUp(self):
         get_init_data(dishes=False, cards=False)
         self.factory = RequestFactory()
         self.logged_user = User.objects.get(username='test_user_1')
 
+    def get_data(self, *args, **kwargs):
+        msg = 'Test inheriting from CardListAbstractTest require .get_data'
+        raise NotImplementedError(msg)
+
     def test_list_exclude_cards_with_no_dishes_for_unauthorized_users(self):
-        results = []
+        count_list = []
         for user in [self.logged_user, AnonymousUser()]:
-            request = self.factory.get('/api/cards/')
+            request = self.factory.get(self.url)
             request.user = user
-            response = api_views.CardAPIList.as_view()(request)
-            content_json = json.loads(response.rendered_content)
-            results.append(content_json['count'])
-        self.assertNotEqual(results[0], results[1])
+            response = self.view_class.as_view()(request)
+            data = self.get_data(response)
+            count_list.append(data['count'])
+        self.assertNotEqual(count_list[0], count_list[1])
 
     def test_list_filter_name(self):
-        request = self.factory.get('/api/cards/?name=Menu+1')
+        url = '{}{}'.format(self.url, '?name=Menu+1')
+        request = self.factory.get(url)
         request.user = self.logged_user
-        response = api_views.CardAPIList.as_view()(request)
-        content_json = json.loads(response.rendered_content)
-        name_list = get_values_from_json(content_json, 'name')
+        response = self.view_class.as_view()(request)
+        data = self.get_data(response)
+        name_list = get_values_list(data, 'name')
         self.assertEqual(len(name_list), 1)
         self.assertEqual(name_list[0], 'Menu 1')
 
@@ -272,13 +280,16 @@ class CardAPIListTest(TestCase):
         yesterday = now - timedelta(days=1)
         after_str = datetime_to_get_param(yesterday)
         before_str = datetime_to_get_param(now)
-        url = '/api/cards/?creation_date_after={}&creation_date_before={}'
+        url = '{}{}'.format(
+            self.url,
+            '?creation_date_after={}&creation_date_before={}'
+        )
         request = self.factory.get(url.format(after_str, before_str))
         request.user = self.logged_user
-        response = api_views.CardAPIList.as_view()(request)
-        content_json = json.loads(response.rendered_content)
-        creation_date_str_list = get_values_from_json(
-                content_json, 'creation_date'
+        response = self.view_class.as_view()(request)
+        data = self.get_data(response)
+        creation_date_str_list = get_values_list(
+                data, 'creation_date'
         )
         for str_date in creation_date_str_list:
             date = str_date_to_datetime(str_date).date()
@@ -290,13 +301,16 @@ class CardAPIListTest(TestCase):
         yesterday = now - timedelta(days=1)
         after_str = datetime_to_get_param(yesterday)
         before_str = datetime_to_get_param(now)
-        url = '/api/cards/?last_change_date_after={}&last_change_date_before={}'
+        url = '{}{}'.format(
+            self.url,
+            '?last_change_date_after={}&last_change_date_before={}'
+        )
         request = self.factory.get(url.format(after_str, before_str))
         request.user = self.logged_user
-        response = api_views.CardAPIList.as_view()(request)
-        content_json = json.loads(response.rendered_content)
-        creation_date_str_list = get_values_from_json(
-                content_json, 'last_change_date'
+        response = self.view_class.as_view()(request)
+        data = self.get_data(response)
+        creation_date_str_list = get_values_list(
+                data, 'last_change_date'
         )
         for str_date in creation_date_str_list:
             date = str_date_to_datetime(str_date).date()
@@ -304,49 +318,62 @@ class CardAPIListTest(TestCase):
             self.assertEqual(date<=now.date(), True)
 
     def test_list_ordering_name_asc(self):
-        request = self.factory.get('/api/cards/?ordering=name')
+        url = '{}{}'.format(self.url, '?ordering=name')
+        request = self.factory.get(url)
         request.user = self.logged_user
-        response = api_views.CardAPIList.as_view()(request)
-        content_json = json.loads(response.rendered_content)
-        name_list = get_values_from_json(content_json, 'name')
+        response = self.view_class.as_view()(request)
+        data = self.get_data(response)
+        name_list = get_values_list(data, 'name')
         self.assertEqual(name_list, sorted(name_list))
 
     def test_list_ordering_name_desc(self):
-        request = self.factory.get('/api/cards/?ordering=-name')
+        url = '{}{}'.format(self.url, '?ordering=-name')
+        request = self.factory.get(url)
         request.user = self.logged_user
-        response = api_views.CardAPIList.as_view()(request)
-        content_json = json.loads(response.rendered_content)
-        name_list = get_values_from_json(content_json, 'name')
+        response = self.view_class.as_view()(request)
+        data = self.get_data(response)
+        name_list = get_values_list(data, 'name')
         self.assertEqual(name_list, sorted(name_list, reverse=True))
 
     def test_list_ordering_dishes_count_asc(self):
-        request = self.factory.get('/api/cards/?ordering=dishes_count')
+        url = '{}{}'.format(self.url, '?ordering=dishes_count')
+        request = self.factory.get(url)
         request.user = self.logged_user
-        response = api_views.CardAPIList.as_view()(request)
-        content_json = json.loads(response.rendered_content)
-        dishes_count_list = get_values_from_json(content_json, 'dishes_count')
+        response = self.view_class.as_view()(request)
+        data = self.get_data(response)
+        dishes_count_list = get_values_list(data, 'dishes_count')
         self.assertEqual(dishes_count_list, sorted(dishes_count_list))
 
     def test_list_ordering_dishes_count_desc(self):
-        request = self.factory.get('/api/cards/?ordering=-dishes_count')
+        url = '{}{}'.format(self.url, '?ordering=-dishes_count')
+        request = self.factory.get(url)
         request.user = self.logged_user
-        response = api_views.CardAPIList.as_view()(request)
-        content_json = json.loads(response.rendered_content)
-        content_json = json.loads(response.rendered_content)
-        dishes_count_list = get_values_from_json(content_json, 'dishes_count')
+        response = self.view_class.as_view()(request)
+        data = self.get_data(response)
+        dishes_count_list = get_values_list(data, 'dishes_count')
         self.assertEqual(
                 dishes_count_list, sorted(dishes_count_list, reverse=True)
         )
 
-    def test_list_create_permission_check(self):
-        data = {
-            'name': 'I should not exist',
-            'description': 'test_list_create_permission_check went wrong'
-        }
-        request = self.factory.post('/api/cards/', data=data)
-        request.user = AnonymousUser()
-        response = api_views.CardAPIList.as_view()(request)
-        self.assertEqual(response.status_code, 403)
+
+class CardAPIListTest(CardListAbstractTest, TestCase):
+    def setUp(self):
+        super().setUp()
+        self.view_class = api_views.CardAPIList
+        self.url = '/api/cards/'
+
+    def get_data(self, response):
+        return json.loads(response.rendered_content)
+
+
+class CardListViewTest(CardListAbstractTest, TestCase):
+    def setUp(self):
+        super().setUp()
+        self.view_class = new_views.CardListView
+        self.url = '/card/'
+
+    def get_data(self, response):
+        return response.data
 
 
 class CardAPIDetailTest(TestCase):
@@ -364,119 +391,3 @@ class CardAPIDetailTest(TestCase):
         request.user = AnonymousUser()
         response = api_views.CardAPIList.as_view()(request)
         self.assertEqual(response.status_code, 403)
-
-
-class CardListTest(TestCase):
-    def setUp(self):
-        get_init_data(dishes=False, cards=False)
-        self.factory = RequestFactory()
-        self.logged_user = User.objects.get(username='test_user_1')
-
-    def test_list_exclude_cards_with_no_dishes_for_unauthorized_users(self):
-        results = []
-        for user in [self.logged_user, AnonymousUser()]:
-            request = self.factory.get('/card/')
-            request.user = user
-            response = views.CardListView.as_view()(request)
-            object_list = response.context_data.get(
-                    'object_list', Card.objects.none
-            )
-            results.append(len(object_list))
-        self.assertNotEqual(results[0], results[1])
-
-    def test_list_filter_name(self):
-        request = self.factory.get('/card/?name=Menu+1')
-        request.user = self.logged_user
-        response = views.CardListView.as_view()(request)
-        object_list = response.context_data.get(
-                'object_list', Card.objects.none
-        )
-        name_list = object_list.values_list('name', flat=True)
-        for name in name_list:
-            self.assertNotEqual(name.lower().find('menu 1'), -1)
-
-    def test_list_filter_creation_date_range(self):
-        now = get_current_datetime()
-        yesterday = now - timedelta(days=1)
-        after_str = datetime_to_get_param(yesterday)
-        before_str = datetime_to_get_param(now)
-        url = '/card/?creation_date__gte={}&creation_date__lte={}'
-        request = self.factory.get(url.format(after_str, before_str))
-        request.user = self.logged_user
-        response = views.CardListView.as_view()(request)
-        object_list = response.context_data.get(
-                'object_list', Card.objects.none
-        )
-
-        for obj in object_list:
-            date = obj.creation_date.date()
-            self.assertEqual(date>=yesterday.date(), True)
-            self.assertEqual(date<=now.date(), True)
-
-    def test_list_filter_last_change_date_range(self):
-        now = get_current_datetime()
-        yesterday = now - timedelta(days=1)
-        after_str = datetime_to_get_param(yesterday)
-        before_str = datetime_to_get_param(now)
-        url = '/card/?last_change_date__gte={}&last_change_date__lte={}'
-        request = self.factory.get(url.format(after_str, before_str))
-        request.user = self.logged_user
-        response = views.CardListView.as_view()(request)
-        object_list = response.context_data.get(
-                'object_list', Card.objects.none
-        )
-
-        for obj in object_list:
-            date = obj.last_change_date.date()
-            self.assertEqual(date>=yesterday.date(), True)
-            self.assertEqual(date<=now.date(), True)
-
-    def test_list_ordering_name_asc(self):
-        request = self.factory.get('/card/?order_by=name')
-        request.user = self.logged_user
-        response = views.CardListView.as_view()(request)
-        object_list = response.context_data.get(
-                'object_list', Card.objects.none
-        )
-        name_list = list(object_list.values_list('name', flat=True))
-        self.assertEqual(name_list, sorted(name_list))
-
-    def test_list_ordering_name_desc(self):
-        request = self.factory.get('/card/?order_by=-name')
-        request.user = self.logged_user
-        response = views.CardListView.as_view()(request)
-        object_list = response.context_data.get(
-                'object_list', Card.objects.none
-        )
-        name_list = list(object_list.values_list('name', flat=True))
-        self.assertEqual(name_list, sorted(name_list, reverse=True))
-
-    def test_list_ordering_dishes_count_asc(self):
-        request = self.factory.get('/card/?order_by=dishes_count')
-        request.user = self.logged_user
-        response = views.CardListView.as_view()(request)
-        object_list = response.context_data.get(
-                'object_list', Card.objects.none
-        )
-        dishes_count_list = list(object_list\
-                .annotate(dishes_count=Count('dishes'))\
-                .values_list('dishes_count', flat=True)
-        )
-        self.assertEqual(dishes_count_list, sorted(dishes_count_list))
-
-    def test_list_ordering_dishes_count_desc(self):
-        request = self.factory.get('/card/?order_by=-dishes_count')
-        request.user = self.logged_user
-        response = views.CardListView.as_view()(request)
-        object_list = response.context_data.get(
-                'object_list', Card.objects.none
-        )
-        dishes_count_list = list(object_list\
-                .annotate(dishes_count=Count('dishes'))\
-                .values_list('dishes_count', flat=True)
-        )
-        self.assertEqual(
-                dishes_count_list,
-                sorted(dishes_count_list, reverse=True)
-        )
-
