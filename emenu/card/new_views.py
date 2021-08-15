@@ -105,3 +105,10 @@ class CardUpdateView(EmenuSingleObjectMixin,
     '''
     serializer_class = CardDetailSerializer
     template_name = 'edit_form.html'
+
+
+class DishListView(EmenuMixin, api_views.DishAPIList):
+    '''
+    View to list all dishes
+    '''
+    template_name = 'dish_list.html'

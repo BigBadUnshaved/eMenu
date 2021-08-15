@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="col-md-3">
+     <div class="border-rectangle-button">
+        <a href="{% url 'dish-ui-create' %}"></i>Create new dish</a>
+     </div>
+    </div>
+    <div class="default-table">
+     <table>
+       <thead>
+         <tr>
+           <th>Name</th>
+           <th>Description</th>
+           <th>Price</th>
+           <th>Preparation time</th>
+           <th>Vegetarian</th>
+           <th>Creation date</th>
+           <th>Date of last change</th>
+         </tr>
+       </thead>
+       <tbody>
+         {% for obj in object_list %}
+         <tr>
+           <td><a href="{% url 'dish-ui-detail' obj.id %}">{{obj.name}}</a></td>
+           <td>{{obj.description}}</td>
+           <td>{{obj.price}}</td>
+           <td>{{obj.preparation_time}}</td>
+           <td>{{obj.is_vegetarian|yesno:"yes, no"}}</td>
+           <td>{{obj.creation_date}}</td>
+           <td>{{obj.last_change_date}}</td>
+         </tr>
+         {% endfor %}
+       </tbody>
+     </table>
+    </div>
+{% endblock %}
